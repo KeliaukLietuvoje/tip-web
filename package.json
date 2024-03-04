@@ -49,11 +49,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "export PORT=8080 && react-scripts start",
-    "start-win": "set PORT=8080 && react-scripts start",
+    "start": "export PORT=8080 && DISABLE_ESLINT_PLUGIN=true  react-scripts start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:sarif": "set SARIF_ESLINT_EMBED=true && yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "build": "react-scripts build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -80,6 +79,7 @@
     "@types/styled-components": "^5.1.25",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5"

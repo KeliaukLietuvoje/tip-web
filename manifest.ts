@@ -1,10 +1,10 @@
 export const manifestForPlugIn = (baseUrl = '') => {
   return {
     registerType: 'autoUpdate',
-    includeAssests: ['favicon.ico', 'apple-touc-icon.png', 'masked-icon.svg'],
+    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
     workbox: {
       navigateFallbackDenylist: [/^\/(api|files)\/.*/],
-      maximumFileSizeToCacheInBytes: 20000000,
+      maximumFileSizeToCacheInBytes: 20000000, // 20 MB
     },
     manifest: {
       name: 'Turizmas',
@@ -15,25 +15,25 @@ export const manifestForPlugIn = (baseUrl = '') => {
           src: `${baseUrl}/android-chrome-192x192.png`,
           sizes: '192x192',
           type: 'image/png',
-          purpose: 'favicon',
+          purpose: 'any',
         },
         {
           src: `${baseUrl}/android-chrome-512x512.png`,
           sizes: '512x512',
           type: 'image/png',
-          purpose: 'favicon',
+          purpose: 'any',
         },
         {
           src: `${baseUrl}/apple-touch-icon.png`,
           sizes: '180x180',
           type: 'image/png',
-          purpose: 'apple touch icon',
+          purpose: 'any',
         },
         {
           src: `${baseUrl}/maskable_icon.png`,
           sizes: '512x512',
           type: 'image/png',
-          purpose: 'any maskable',
+          purpose: 'maskable',
         },
       ],
       theme_color: '#171717',

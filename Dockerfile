@@ -20,7 +20,7 @@ ARG NODE_ENV=production
 RUN yarn build
 
 # Caddy stage
-FROM caddy:2.6-alpine
+FROM caddy:2-alpine
 
 # Expose port
 EXPOSE 80

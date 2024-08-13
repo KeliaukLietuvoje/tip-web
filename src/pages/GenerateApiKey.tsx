@@ -50,7 +50,7 @@ const GenerateApiKey = () => {
           <TextField
             value={apiKey || tenant?.apiKey}
             label={inputLabels.apiKey}
-            rightIcon={
+            right={
               apiKey ? (
                 <IconContainer onClick={() => navigator.clipboard.writeText(apiKey)}>
                   <div>

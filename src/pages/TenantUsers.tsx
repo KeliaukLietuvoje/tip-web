@@ -2,13 +2,13 @@ import {
   Button,
   DynamicFilter,
   FilterInputTypes,
+  NotFoundInfoProps,
   Table,
   TableRow,
   useStorage,
 } from '@aplinkosministerija/design-system';
 import { isEmpty } from 'lodash';
 import api from '../api';
-import { NotFoundProps } from '../components/other/NotFound';
 import PageWrapper from '../components/wrappers/PageWrapper';
 import { useGenericTablePageHooks, useTableData } from '../state/hooks';
 import { TableButtonsRow } from '../styles/CommonStyles';
@@ -69,10 +69,10 @@ const TenantUsers = () => {
     name: 'tenantUsers',
   });
 
-  const notFoundInfo: NotFoundProps = {
+  const notFoundInfo: NotFoundInfoProps = {
     url: slugs.newTenantUser,
-    urlLabel: emptyStateUrlLabels.user,
-    label: emptyStateLabels.user,
+    urlText: emptyStateUrlLabels.user,
+    text: emptyStateLabels.user,
     onClick: () => {
       navigate(slugs.newTenantUser);
     },
@@ -111,7 +111,7 @@ const TenantUsers = () => {
           isFilterApplied={!isEmpty(filters)}
           data={tableData}
           columns={tenantUsersColumns}
-          onPageChane={(page) => {
+          onPageChange={(page) => {
             const searchParams = new URLSearchParams(window.location.search);
             searchParams.set('page', page.toString());
             navigate({

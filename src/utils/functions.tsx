@@ -1,8 +1,8 @@
+import { FilterConfig } from '@aplinkosministerija/design-system';
 import { map } from 'lodash';
 import { NavigateFunction } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { default as Api } from '../api';
-import { FilterConfig } from '../components/other/DynamicFilter/Filter';
 import { RolesTypes } from './constants';
 import { roleLabels, validationTexts } from './texts';
 import { Profile } from './types';

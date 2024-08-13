@@ -1,9 +1,10 @@
+import { Button } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { device } from '../../styles';
+import { ButtonColors } from '../../utils/constants';
 import { buttonsTitles } from '../../utils/texts';
 import { DeleteInfoProps } from '../../utils/types';
-import Button, { ButtonColors } from '../buttons/Button';
 import DeleteCard from './DeleteCard';
 import Icon from './Icons';
 import Modal from './Modal';
@@ -19,7 +20,7 @@ export const DeleteComponent = ({ deleteInfo }: { deleteInfo?: DeleteInfoProps }
     deleteName,
     deleteTitle,
     deleteFunction,
-  } = deleteInfo!;
+  } = deleteInfo;
 
   if (!deleteFunction) return <></>;
 
@@ -30,10 +31,7 @@ export const DeleteComponent = ({ deleteInfo }: { deleteInfo?: DeleteInfoProps }
           onClick={() => setShowModal(true)}
           variant={ButtonColors.TRANSPARENT}
           type="button"
-          leftIcon={<StyledIcon name="deleteItem" />}
-          height={32}
-          buttonPadding="6px 8px"
-          color="black"
+          left={<StyledIcon name="deleteItem" />}
         >
           {buttonsTitles.delete}
         </DeleteButton>
@@ -69,8 +67,6 @@ const StyledIcon = styled(Icon)`
 `;
 
 const DeleteButton = styled(Button)`
-  button {
-    border-color: ${({ theme }) => theme.colors.danger};
-    color: ${({ theme }) => theme.colors.danger};
-  }
+  border-color: ${({ theme }) => theme.colors.danger};
+  color: ${({ theme }) => theme.colors.danger};
 `;

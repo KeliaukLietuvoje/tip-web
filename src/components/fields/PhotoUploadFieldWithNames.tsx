@@ -1,3 +1,4 @@
+import { FieldWrapper } from '@aplinkosministerija/design-system';
 import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -8,7 +9,6 @@ import { FileProps } from '../../utils/types';
 import { validateFileTypes } from '../../utils/validation';
 import Icon from '../other/Icons';
 import Loader from '../other/Loader';
-import FieldWrapper from './components/FieldWrapper';
 import PhotoFieldWithName from './PhotoFieldWithName';
 
 export interface PhotoUploadFieldProps {
@@ -125,6 +125,8 @@ const UploadFieldInnerContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 16px;
+  padding: 6px 12px;
+  color: ${({ theme }) => theme?.colors?.text?.secondary};
   @media ${device.mobileL} {
     width: 100%;
   }
@@ -133,9 +135,8 @@ const UploadFieldInnerContainer = styled.div`
 const StyledInput = styled.input``;
 
 const StyledText = styled.div`
-  color: #b55007;
-  font-size: 1.6rem;
-  line-height: 18px;
+  font-size: 1.4rem;
+  line-height: 18.2px;
 `;
 
 const UploadFieldContainer = styled.div<{

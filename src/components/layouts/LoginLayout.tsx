@@ -1,7 +1,9 @@
+import Div100vh from 'react-div-100vh';
 import styled from 'styled-components';
-import { device } from '../../styles';
+import LoginImage from '../../assets/loginImage.jpeg';
+import { descriptions } from '../../utils/texts';
 import { ChildrenType } from '../../utils/types';
-import Icon from '../other/Icons';
+import Icon, { IconName } from '../other/Icons';
 
 export interface LoginLayoutProps {
   children?: ChildrenType;
@@ -9,17 +11,43 @@ export interface LoginLayoutProps {
 
 const LoginLayout = ({ children }: LoginLayoutProps) => {
   return (
-    <Container>
-      <LayoutImage src={'./LoginImage.jpg'} />
-      <InnerContainer>
-        <LogoContainer>
-          <Logo name="logo" />
-        </LogoContainer>
-        {children}
-      </InnerContainer>
-    </Container>
+    <Div100vh>
+      <Container>
+        <ImageContainer>
+          <LayoutImage src={LoginImage} />
+        </ImageContainer>
+        <Content>
+          <LogoContainer>
+            <Logo name={IconName.logo} />
+          </LogoContainer>
+          <Description>{descriptions.tip}</Description>
+          {children}
+        </Content>
+      </Container>
+    </Div100vh>
   );
 };
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 80px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0 0 40px 40px;
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #0a196f;
+`;
 
 const Logo = styled(Icon)`
   width: 200px;
@@ -32,36 +60,22 @@ const LogoContainer = styled.div`
 `;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
-  min-height: 100vh;
   height: 100%;
-  overflow-y: auto;
-`;
-
-const InnerContainer = styled.div`
-  background-color: #ffffff;
-  padding: 0 48px 16px 55px;
-  width: 100%;
-  height: fit-content;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  @media ${device.mobileM} {
-    padding: 16px;
-  }
 `;
 
 const LayoutImage = styled.img`
-  max-width: 70%;
-  position: sticky;
   object-fit: cover;
-  @media ${device.mobileXL} {
-    width: 50%;
-  }
-  @media ${device.mobileL} {
-    display: none;
-  }
+  height: 100%;
+  width: 100%;
+`;
+
+const Description = styled.div`
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme?.colors?.text?.secondary};
+  margin: 12px 0;
 `;
 
 export default LoginLayout;

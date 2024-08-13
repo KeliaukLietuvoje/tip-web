@@ -1,16 +1,21 @@
+import { SimpleContainer, TextField } from '@aplinkosministerija/design-system';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import api from '../api';
-import SimpleContainer from '../components/containers/SimpleContainer';
-import TextField from '../components/fields/TextField';
 import FormPageWrapper from '../components/wrappers/FormikFormPageWrapper';
 import { useAppSelector } from '../state/hooks';
 import { device } from '../styles';
-import { handleAlert, handleSuccess } from '../utils/functions';
-import { formLabels, inputLabels, pageTitles, validationTexts } from '../utils/texts';
-import { User } from '../utils/types';
-import { validateProfileForm } from '../utils/validation';
+import {
+  formLabels,
+  handleAlert,
+  handleSuccess,
+  inputLabels,
+  pageTitles,
+  User,
+  validateProfileForm,
+  validationTexts,
+} from '../utils';
 
 export interface UserProps {
   firstName?: string;
@@ -89,6 +94,7 @@ const Profile = () => {
 
   return (
     <FormPageWrapper
+      twoColumn={false}
       back={false}
       title={pageTitles.updateProfile}
       initialValues={initialProfileValues}

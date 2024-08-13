@@ -1,19 +1,22 @@
+import { Button, CheckBox } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import api from '../api';
-import { Checkbox } from '../components';
-import Button from '../components/buttons/Button';
 import Icon from '../components/other/Icons';
 import LoaderComponent from '../components/other/LoaderComponent';
 import Modal from '../components/other/Modal';
 import ProfileCard from '../components/other/ProfileCard';
 import { useAppSelector } from '../state/hooks';
 import { device } from '../styles';
-import { useLogoutMutation } from '../utils/hooks';
-import { handleSelectProfile } from '../utils/loginFunctions';
-import { buttonsTitles, formLabels, inputLabels } from '../utils/texts';
+import {
+  buttonsTitles,
+  formLabels,
+  handleSelectProfile,
+  inputLabels,
+  useLogoutMutation,
+} from '../utils';
 const cookies = new Cookies();
 
 const Profiles = () => {
@@ -25,7 +28,6 @@ const Profiles = () => {
   const queryClient = useQueryClient();
 
   const updateAgreeToTermsOfService = useMutation(api.agreeToTermsOfService, {
-    onError: () => {},
     onSuccess: async () => {
       await queryClient.invalidateQueries([token]);
     },
@@ -48,7 +50,7 @@ const Profiles = () => {
             allowFullScreen={true}
             src="./termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0"
           />
-          <Checkbox
+          <CheckBox
             value={agree}
             label={inputLabels.agreeWithTermsOfService}
             onChange={(value) => setAgree(value)}
@@ -65,7 +67,10 @@ const Profiles = () => {
         <InnerContainer>
           {user.profiles?.map((profile) => (
             <div key={profile?.id} onClick={() => handleSelect(profile.id)}>
-              <ProfileCard name={profile.name} email={profile.email || user.email || '-'} />
+              <ProfileCard
+                name={profile.name || `${user.firstName} ${user.lastName}`}
+                email={profile.email || user.email || '-'}
+              />
             </div>
           ))}
           <Row onClick={() => mutateAsync()}>

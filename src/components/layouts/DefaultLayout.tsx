@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@material-ui/core';
+import { useWindowSize } from '@aplinkosministerija/design-system';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import { device } from '../../styles';
@@ -16,7 +16,7 @@ export interface DefaultLayoutProps {
 }
 
 const DefaultLayout = ({ children, loggedIn }: DefaultLayoutProps) => {
-  const isMobile = useMediaQuery(device.mobileL);
+  const isMobile = useWindowSize(device.mobileL);
   const profileId = cookies.get('profileId');
 
   if (loggedIn && profileId) {
@@ -29,7 +29,6 @@ const DefaultLayout = ({ children, loggedIn }: DefaultLayoutProps) => {
       </Container>
     );
   }
-
   return <LoginLayout>{children}</LoginLayout>;
 };
 
@@ -37,7 +36,6 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: white;
   flex-direction: column;
   overflow-y: scroll;
   @media ${device.mobileL} {

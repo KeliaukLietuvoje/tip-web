@@ -1,3 +1,4 @@
+import { DesignSystemProvider } from '@aplinkosministerija/design-system';
 import * as Sentry from '@sentry/react';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
@@ -20,15 +21,14 @@ const { store, persistor } = redux;
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
-const basename = process.env.PUBLIC_URL || '/';
-const env = process.env;
+const env = import.meta.env;
 
-const queryClient = new QueryClient();
+const basename = env?.VITE_BASE_URL || '/';
 
-if (env.REACT_APP_SENTRY_DSN) {
+if (env.VITE_SENTRY_DSN) {
   Sentry.init({
-    environment: env.REACT_APP_ENVIRONMENT,
-    dsn: env.REACT_APP_SENTRY_DSN,
+    environment: env.VITE_ENVIRONMENT,
+    dsn: env.VITE_SENTRY_DSN,
     integrations: [
       new Sentry.BrowserTracing({
         routingInstrumentation: Sentry.reactRouterV6Instrumentation(
@@ -41,26 +41,26 @@ if (env.REACT_APP_SENTRY_DSN) {
       }),
     ],
     tracesSampleRate: 1,
-    release: env.REACT_APP_VERSION,
-    tracePropagationTargets: [env.REACT_APP_MAPS_HOST!],
+    release: env.VITE_VERSION,
+    tracePropagationTargets: [env.VITE_MAPS_HOST],
   });
 }
 
+const queryClient = new QueryClient();
+
 root.render(
   <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <PersistGate persistor={persistor}>
-        <BrowserRouter basename={basename}>
-          <ThemeProvider theme={theme}>
-            <GlobalStyle />
-            <App />
-          </ThemeProvider>
-        </BrowserRouter>
-      </PersistGate>
-    </QueryClientProvider>
+    <DesignSystemProvider>
+      <QueryClientProvider client={queryClient}>
+        <PersistGate persistor={persistor}>
+          <BrowserRouter basename={basename}>
+            <ThemeProvider theme={theme}>
+              <GlobalStyle />
+              <App />
+            </ThemeProvider>
+          </BrowserRouter>
+        </PersistGate>
+      </QueryClientProvider>
+    </DesignSystemProvider>
   </Provider>,
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

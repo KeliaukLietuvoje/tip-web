@@ -1,86 +1,137 @@
+import { Theme } from '@aplinkosministerija/design-system';
 import { createGlobalStyle } from 'styled-components';
-export interface Theme {
-  colors: {
-    disable?: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    transparent: string;
-    danger: string;
-    success: string;
-    hover: {
-      primary: string;
-      secondary: string;
-      tertiary: string;
-      transparent: string;
-      danger: string;
-      success: string;
-      card?: string;
-    };
-    sideBar: string;
-    border: string;
-    label: string;
-    error: string;
-    grey: string;
-    tertiaryLight: string;
-  };
-}
 
 export const theme: Theme = {
   colors: {
-    primary: '#006E82',
-    secondary: '#13C9E7',
-    tertiary: '#EFF8FF',
+    primary: '#003C3A',
+    secondary: '#C7E6DC',
+    tertiary: '#73DC8C',
     transparent: 'transparent',
+    label: '#4B5565',
     danger: '#FE5B78',
-    success: '#4FB922',
-    hover: {
-      primary: '#006E82',
-      secondary: '#13C9E7',
-      tertiary: '#def0ff',
-      danger: '#FE5B78',
-      transparent: '#F3F3F7',
-      success: '#4FB922B3',
+    success: '#258800',
+    powder: '#FFFFFFCC',
+    purple: '#8a33fe',
+    purpleBrighter: '#b020a2',
+    yellow: '#ffb400',
+    yellowDarker: '#ffd399',
+    greyDarker: '#d4d5de',
+    lightSteelBlue: '#cdd5df',
+    buttons: {
+      primary: {
+        background: '#003C3A',
+        hover: '#003C3A',
+        text: 'white',
+        border: '#003C3A',
+      },
+      secondary: {
+        background: 'white',
+        text: '#101010',
+        border: 'white',
+        hover: '#121A55',
+      },
+      tertiary: {
+        background: '#73DC8C',
+        text: 'white',
+        border: '#73DC8C',
+        hover: '#F7F7F7',
+      },
+      success: {
+        background: '#258800',
+        text: 'white',
+        border: '#258800',
+        hover: '#4FB922B3',
+      },
+      danger: {
+        background: '#FE5B78',
+        text: 'white',
+        border: '#FE5B78',
+        hover: '#FE5B78E6',
+      },
+      transparent: {
+        background: 'transparent',
+        text: '#101010',
+        border: 'transparent',
+      },
     },
-    sideBar: '#004650',
-    tertiaryLight: '#F3F3F7',
+    text: {
+      primary: '#121926',
+      secondary: '#535D6C',
+      tertiary: '#4B5565',
+      label: '#697586',
+      error: '#FE5B78',
+      labels: '#697586',
+      input: '#231f20',
+      accent: '#102EB1',
+      powder: '#FFFFFFCC',
+      retroBlack: '#101010',
+      royalBlue: '#1121DA',
+    },
     border: '#CDD5DF',
-    label: '#231F20',
-    error: '#FE5B78',
-    grey: '#B3B5C4',
+    background: '#F7F9FB',
+    cardBackground: { primary: '#f7f7f7', success: '#eafbf6' },
+    GREY: '#f7f7f7',
+  },
+  radius: {
+    buttons: 0.4,
+    fields: 0.4,
+    multiSelectFieldTag: 0.4,
+  },
+  height: {
+    fields: 4,
+    buttons: 4,
+  },
+  fontSize: {
+    fields: 0,
+    fieldLabels: 0,
+    buttons: 0,
+  },
+  fontWeight: {
+    fields: 0,
+    fieldLabels: 0,
+    buttons: 0,
   },
 };
 
 export const GlobalStyle = createGlobalStyle`
+  @font-face {
+      font-family: 'Stabil Grotesk';
+      src: url('./fonts/StabilGrotesk-Regular.woff2') format('woff2'),
+           url('./fonts/StabilGrotesk-Regular.woff') format('woff');
+        font-weight: normal;
+      font-style: normal;
+    }
 
- *{
-  box-sizing: border-box;
-  font-family: Atkinson Hyperlegible;
- }
 
-  html { 
-        font-size: 62.5%; 
-    width: 100vw;
-    height: 100vh;
- 
+
+  * {
+    box-sizing: border-box;
+    font-family: 'Stabil Grotesk', sans-serif;
   }
-
+  html {
+    font-size: 62.5%;
+    width: 100vw;
+    color: ${theme.colors.text?.primary};
+  }
   body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #EEEBE5;
+    background-color: ${theme.colors.background};
     font-size: 1.6rem;
-    width: 100vw;
-    height: 100vh;
-    overflow:hidden;
-  } 
+    overflow: hidden;
+    justify-content: center;
+  }
   h1 {
     font-size: 3.2rem;
-    color: "#121A55";
+    color: ${theme.colors.text?.primary};
   }
   a {
     text-decoration: none;
+    color: inherit;
+    :hover {
+      color: inherit;
+    }
   }
   button {
     outline: none;
@@ -89,24 +140,16 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
     background-color: transparent;
   }
-  #__next {
-    height: 100%;
-  }
+
   textarea {
     font-size: 1.6rem;
   }
-
-
-
-
-
+  
 `;
 
 export const device = {
   mobileS: `(max-width: 320px)`,
   mobileM: `(max-width: 425px)`,
-  mobileL: `(max-width: 788px)`,
-  mobileXL: `(max-width: 1025px)`,
-  tablet: `(max-width: 1024px) and (min-width: 769px)`,
-  desktop: `(min-width: 1025px)`,
+  mobileL: `(max-width: 868px)`,
+  desktop: `(min-width: 869px)`,
 };

@@ -1,33 +1,39 @@
+import {
+  NumericTextField,
+  SelectField,
+  SimpleContainer,
+  TextField,
+} from '@aplinkosministerija/design-system';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import SimpleContainer from '../components/containers/SimpleContainer';
-import NumericTextField from '../components/fields/NumericTextField';
-import SelectField from '../components/fields/SelectField';
-import TextField from '../components/fields/TextField';
 import LoaderComponent from '../components/other/LoaderComponent';
 import FormPageWrapper from '../components/wrappers/FormikFormPageWrapper';
 import { useAppSelector } from '../state/hooks';
 import { device } from '../styles';
-import { RolesTypes } from '../utils/constants';
-import { getRolesTypes, handleAlert, isNew } from '../utils/functions';
-import { slugs } from '../utils/slugs';
 import {
   buttonsTitles,
   deleteDescriptionFirstPart,
   deleteDescriptionSecondPart,
+  DeleteInfoProps,
   deleteTitles,
   formLabels,
+  getRolesTypes,
+  handleAlert,
   inputLabels,
+  isNew,
   pageTitles,
-} from '../utils/texts';
-import { DeleteInfoProps, User } from '../utils/types';
-import { validateCreateTenantUser, validateUpdateTenantUser } from '../utils/validation';
-import { default as api } from './../api';
+  RolesTypes,
+  slugs,
+  User,
+  validateCreateTenantUser,
+  validateUpdateTenantUser,
+} from '../utils';
+import api from './../api';
 
 const TenantUserForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id = '' } = useParams();
   const currentUser = useAppSelector((state) => state.user?.userData);
 
   const createUser = useMutation((values: User) => api.createTenantUser(values), {
@@ -58,7 +64,7 @@ const TenantUserForm = () => {
     return await updateUser.mutateAsync(values);
   };
 
-  const { data: user, isLoading } = useQuery(['tenantUser', id], () => api.tenantUser(id!), {
+  const { data: user, isLoading } = useQuery(['tenantUser', id], () => api.tenantUser(id), {
     onError: () => {
       navigate(slugs.tenantUsers);
     },
@@ -68,7 +74,7 @@ const TenantUserForm = () => {
     enabled: !isNew(id),
   });
 
-  const removeUser = useMutation(() => api.deleteTenantUser(id!), {
+  const removeUser = useMutation(() => api.deleteTenantUser(id), {
     onError: () => {
       handleAlert();
     },
@@ -101,7 +107,7 @@ const TenantUserForm = () => {
         <SimpleContainer title={formLabels.tenantUserInfo}>
           <>
             <Row>
-              <StyledTextField
+              <TextField
                 label={inputLabels.firstName}
                 value={values.firstName}
                 error={errors.firstName}
@@ -109,7 +115,7 @@ const TenantUserForm = () => {
                 onChange={(firstName) => handleChange('firstName', firstName)}
               />
 
-              <StyledTextField
+              <TextField
                 label={inputLabels.lastName}
                 name="lastName"
                 value={values.lastName}
@@ -117,7 +123,7 @@ const TenantUserForm = () => {
                 onChange={(lastName) => handleChange('lastName', lastName)}
               />
               {isNew(id) && (
-                <StyledNumericTextField
+                <NumericTextField
                   label={inputLabels.personalCode}
                   name="personalCode"
                   value={values.personalCode}
@@ -125,21 +131,21 @@ const TenantUserForm = () => {
                   onChange={(code) => handleChange('personalCode', code.replace(/\s/g, ''))}
                 />
               )}
-              <StyledTextField
+              <TextField
                 label={inputLabels.phone}
                 value={values.phone}
                 error={errors.phone}
                 name="phone"
                 onChange={(phone) => handleChange('phone', phone)}
               />
-              <StyledTextField
+              <TextField
                 label={inputLabels.email}
                 name="email"
                 value={values.email}
                 error={errors.email}
                 onChange={(email) => handleChange('email', email)}
               />
-              <StyledSelectField
+              <SelectField
                 label={inputLabels.role}
                 name="role"
                 value={getRolesTypes().find((role) => role.id === values.role)}
@@ -167,6 +173,7 @@ const TenantUserForm = () => {
       renderForm={renderForm}
       validationSchema={isNew(id) ? validateCreateTenantUser : validateUpdateTenantUser}
       deleteInfo={deleteInfo}
+      twoColumn={false}
     />
   );
 };
@@ -179,17 +186,6 @@ const Row = styled.div`
   @media ${device.mobileL} {
     grid-template-columns: repeat(1, 1fr);
   }
-`;
-
-const StyledTextField = styled(TextField)`
-  flex: 1;
-`;
-
-const StyledSelectField = styled(SelectField)`
-  flex: 1;
-`;
-const StyledNumericTextField = styled(NumericTextField)`
-  flex: 1;
 `;
 
 const InnerContainer = styled.div`

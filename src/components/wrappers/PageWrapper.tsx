@@ -1,12 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { device } from '../../styles';
-import Button, { ButtonColors } from '../buttons/Button';
 
 interface PageWrapperProps {
   children: JSX.Element;
   title: string;
-  buttonInfo: ButtonInfo;
   back?: boolean;
 }
 
@@ -16,23 +13,11 @@ export interface ButtonInfo {
   label: string;
 }
 
-const PageWrapper = ({ children, title, buttonInfo }: PageWrapperProps) => {
-  const navigate = useNavigate();
-  const { url, label, loading } = buttonInfo;
+const PageWrapper = ({ children, title }: PageWrapperProps) => {
   return (
     <Container>
       <Row>
         <Title>{title}</Title>
-        <Button
-          onClick={() => {
-            navigate(url);
-          }}
-          disabled={loading}
-          padding="0"
-          variant={ButtonColors.PRIMARY}
-        >
-          {label}
-        </Button>
       </Row>
       <>{children}</>
     </Container>

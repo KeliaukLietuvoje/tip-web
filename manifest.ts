@@ -1,11 +1,10 @@
-import { VitePWAOptions } from 'vite-plugin-pwa';
-
 export const manifestForPlugIn = (baseUrl = '') => {
   return {
     registerType: 'autoUpdate',
     includeAssests: ['favicon.ico', 'apple-touc-icon.png', 'masked-icon.svg'],
     workbox: {
       navigateFallbackDenylist: [/^\/(api|files)\/.*/],
+      maximumFileSizeToCacheInBytes: 20000000,
     },
     manifest: {
       name: 'Turizmas',

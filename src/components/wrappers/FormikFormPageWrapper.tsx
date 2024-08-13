@@ -93,6 +93,7 @@ const FormPageWrapper = ({
                 <InnerRow>
                   {back && (
                     <StyledBackButton
+                      type="button"
                       onClick={() => navigate(url as string)}
                       left={<StyledBackIcon name={IconName.back} />}
                       variant={ButtonColors.TRANSPARENT}

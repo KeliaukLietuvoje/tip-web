@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useMutation } from 'react-query';
 import {
   Location,
@@ -12,6 +13,7 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import Cookies from 'universal-cookie';
 import api from './api';
 import DefaultLayout from './components/layouts/DefaultLayout';

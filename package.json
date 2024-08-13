@@ -2,7 +2,7 @@
   "name": "tip-web",
   "version": "0.1.0",
   "dependencies": {
-    "@aplinkosministerija/design-system": "^0.0.73",
+    "@aplinkosministerija/design-system": "^0.0.75",
     "@reduxjs/toolkit": "^1.8.1",
     "@sentry/react": "^7.69.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -24,7 +24,7 @@
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.21",
     "react": "^18.0.0",
-    "react-datepicker": "^4.7.0",
+    "react-datepicker": "^7.3.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
     "react-query": "^3.39.3",

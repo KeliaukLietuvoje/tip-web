@@ -69,4 +69,9 @@ const StyledIcon = styled(Icon)`
 const DeleteButton = styled(Button)`
   border-color: ${({ theme }) => theme.colors.danger};
   color: ${({ theme }) => theme.colors.danger};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.danger};
+    color: ${({ theme }) => theme.colors.danger};
+  }
 `;

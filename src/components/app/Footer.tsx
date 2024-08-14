@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { device } from '../../styles';
-import { getPublicUrl } from '../../utils';
 import { descriptions } from '../../utils/texts';
 import Icon from '../other/Icons';
 import Modal from '../other/Modal';
@@ -15,12 +14,7 @@ const Footer = () => {
           <IconContainer onClick={() => setShowTermsOfService(false)}>
             <StyledIcon name="close" />
           </IconContainer>
-          <StyledIframe
-            width={'100%'}
-            height={'100%'}
-            allowFullScreen={true}
-            src={getPublicUrl('termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0')}
-          />
+          <StyledIframe width={'100%'} height={'100%'} allowFullScreen={true} />
         </InnerWrapper>
       </Modal>
       <InnerContainer>

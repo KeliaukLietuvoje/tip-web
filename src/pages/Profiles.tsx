@@ -13,7 +13,6 @@ import { device } from '../styles';
 import {
   buttonsTitles,
   formLabels,
-  getPublicUrl,
   handleSelectProfile,
   inputLabels,
   useLogoutMutation,
@@ -49,7 +48,7 @@ const Profiles = () => {
             width={'100%'}
             height={'100%'}
             allowFullScreen={true}
-            src={getPublicUrl('termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0')}
+            src={'./termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0'}
           />
           <CheckBox
             value={agree}

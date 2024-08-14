@@ -1,7 +1,7 @@
 export const manifestForPlugIn = (baseUrl = '') => {
   return {
     registerType: 'autoUpdate',
-    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg', 'termsOfService.pdf'],
     workbox: {
       navigateFallbackDenylist: [/^\/(api|files)\/.*/],
       maximumFileSizeToCacheInBytes: 20000000, // 20 MB

@@ -112,3 +112,7 @@ export const getSubCategoriesOptions = async (input: string, page: number, ids: 
     page,
   });
 };
+
+const env = import.meta.env;
+
+export const getPublicUrl = (url: string) => `${env.VITE_BASE_URL}/${url}`;

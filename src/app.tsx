@@ -1,6 +1,7 @@
+import { Button, CheckBox, device, Modal } from '@aplinkosministerija/design-system';
 import { useCallback, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import {
   Location,
   Navigate,
@@ -13,6 +14,7 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styled from 'styled-components';
 
 import Cookies from 'universal-cookie';
 import api from './api';
@@ -21,6 +23,7 @@ import LoaderComponent from './components/other/LoaderComponent';
 import { CantLogin } from './pages/CantLogin';
 import { Login } from './pages/Login';
 import { useAppSelector } from './state/hooks';
+import { buttonsTitles, inputLabels } from './utils';
 import { useEGatesSign, useFilteredRoutes, useGetCurrentProfile, useUserInfo } from './utils/hooks';
 import { clearCookies, handleUpdateTokens } from './utils/loginFunctions';
 import { slugs } from './utils/slugs';
@@ -36,6 +39,7 @@ interface RouteProps {
 
 function App() {
   const loggedIn = useAppSelector((state) => state.user.loggedIn);
+  const user = useAppSelector((state) => state?.user?.userData);
   const profiles = useAppSelector((state) => state.user.userData.profiles);
   const [searchParams] = useSearchParams();
   const { ticket, eGates } = Object.fromEntries([...Array.from(searchParams)]);
@@ -43,7 +47,9 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const routes = useFilteredRoutes();
-
+  const queryClient = useQueryClient();
+  const [agree, setAgree] = useState(false);
+  const token = cookies.get('token');
   const currentProfile = useGetCurrentProfile();
   const profileId = currentProfile?.id;
 
@@ -55,6 +61,12 @@ function App() {
       })
       .includes(profileId) &&
     loggedIn;
+
+  const updateAgreeToTermsOfService = useMutation(api.agreeToTermsOfService, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([token]);
+    },
+  });
 
   const updateTokensMutation = useMutation(api.refreshToken, {
     onError: () => {
@@ -132,9 +144,28 @@ function App() {
 
     return slugs.forms;
   };
-
   return (
     <>
+      <Modal visible={!!user?.id && !user.isAgreedToTermsOfService}>
+        <InnerWrapper>
+          <StyledIframe
+            width={'100%'}
+            height={'100%'}
+            allowFullScreen={true}
+            src={'./termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0'}
+          />
+          <CheckBox
+            value={agree}
+            label={inputLabels.agreeWithTermsOfService}
+            onChange={(value) => setAgree(value)}
+          />
+          <ButtonContainer>
+            <Button disabled={!agree} onClick={() => updateAgreeToTermsOfService.mutateAsync()}>
+              {buttonsTitles.agree}
+            </Button>
+          </ButtonContainer>
+        </InnerWrapper>
+      </Modal>
       {!isLoading ? (
         <DefaultLayout loggedIn={loggedIn}>
           <>
@@ -186,3 +217,34 @@ const ProtectedRoute = ({ loggedIn, profileId, location }: RouteProps) => {
 };
 
 export default App;
+
+const StyledIframe = styled.iframe<{
+  height: string;
+  width: string;
+}>`
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+`;
+
+const InnerWrapper = styled.div`
+  background-color: white;
+  border: 1px #dfdfdf solid;
+  border-radius: 4px;
+  margin: auto;
+  width: 700px;
+  height: 700px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media ${device.mobileL} {
+    padding: 16px;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+`;

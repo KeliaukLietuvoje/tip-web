@@ -1,12 +1,14 @@
+import { device } from '@aplinkosministerija/design-system';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Icon from '../other/Icons';
+import Icon, { IconName } from '../other/Icons';
 
-const AppLogo = () => {
+const AppLogo = ({ isWhite = false }) => {
   const navigate = useNavigate();
+
   return (
     <LogoContainer onClick={() => navigate('/')}>
-      <Logo name="logo" />
+      <Logo isWhite={isWhite} name={IconName.logo} />
     </LogoContainer>
   );
 };
@@ -22,6 +24,10 @@ const LogoContainer = styled.div`
   font-weight: bold;
 `;
 
-const Logo = styled(Icon)`
-  width: 100px;
+const Logo = styled(Icon)<{ isWhite: boolean }>`
+  fill: ${({ isWhite }) => (isWhite ? 'white' : 'black')};
+  width: 140px;
+  @media ${device.mobileL} {
+    width: 100px;
+  }
 `;

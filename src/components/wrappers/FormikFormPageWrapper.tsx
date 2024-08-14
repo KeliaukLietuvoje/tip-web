@@ -1,14 +1,15 @@
+import { Button } from '@aplinkosministerija/design-system';
 import { Form, Formik, yupToFormErrors } from 'formik';
 import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { device } from '../../styles';
+import { ButtonColors } from '../../utils/constants';
 import { buttonsTitles, validationTexts } from '../../utils/texts';
 import { DeleteInfoProps } from '../../utils/types';
-import Button, { ButtonColors } from '../buttons/Button';
 import { DeleteComponent } from '../other/DeleteComponent';
-import Icon from '../other/Icons';
+import Icon, { IconName } from '../other/Icons';
 
 interface FormPageWrapperProps {
   renderForm: (
@@ -24,7 +25,6 @@ interface FormPageWrapperProps {
   additionalValidation?: any;
   back?: boolean;
   backUrl?: string;
-  canSubmit?: boolean;
   disabled?: boolean;
   deleteInfo?: DeleteInfoProps;
   twoColumn?: boolean;
@@ -39,7 +39,6 @@ const FormPageWrapper = ({
   validationSchema,
   back = true,
   additionalValidation,
-  canSubmit = true,
   backUrl,
   disabled,
   deleteInfo,
@@ -59,6 +58,21 @@ const FormPageWrapper = ({
     }
     setLoading(false);
   };
+  const validate = async (values) => {
+    setValidateOnChange(true);
+    const additionalErrors = additionalValidation ? additionalValidation(values) : null;
+
+    try {
+      await validationSchema.validate(values, { abortEarly: false });
+    } catch (e) {
+      return {
+        ...yupToFormErrors(e),
+        ...additionalErrors,
+      };
+    }
+
+    return additionalErrors;
+  };
 
   const url: string | number = backUrl || -1;
 
@@ -70,21 +84,7 @@ const FormPageWrapper = ({
         onSubmit={handleSubmit}
         validateOnChange={validateOnChange}
         validationSchema={validationSchema}
-        validate={async (values) => {
-          setValidateOnChange(true);
-          const additionalErrors = additionalValidation ? additionalValidation(values) : null;
-
-          try {
-            await validationSchema.validate(values, { abortEarly: false });
-          } catch (e) {
-            return {
-              ...yupToFormErrors(e),
-              ...additionalErrors,
-            };
-          }
-
-          return additionalErrors;
-        }}
+        validate={validate}
       >
         {({ values, errors, setFieldValue, handleSubmit, setValues }) => {
           return (
@@ -92,17 +92,14 @@ const FormPageWrapper = ({
               <Row>
                 <InnerRow>
                   {back && (
-                    <Button
-                      onClick={() => navigate(url as string)}
-                      leftIcon={<StyledBackIcon name="back" />}
-                      variant={ButtonColors.TRANSPARENT}
+                    <StyledBackButton
                       type="button"
-                      height={32}
-                      buttonPadding="6px 8px"
-                      color="black"
+                      onClick={() => navigate(url as string)}
+                      left={<StyledBackIcon name={IconName.back} />}
+                      variant={ButtonColors.TRANSPARENT}
                     >
                       {buttonsTitles.back}
-                    </Button>
+                    </StyledBackButton>
                   )}
                   <Title>{title}</Title>
                 </InnerRow>
@@ -110,19 +107,12 @@ const FormPageWrapper = ({
               </Row>
               {renderForm(values, errors, setFieldValue, setValues)}
 
-              {!isEmpty(errors) && (
-                <MessageContainer>
-                  <ErrorMessage>{validationTexts.formFillError}</ErrorMessage>
-                  <Invisible />
-                </MessageContainer>
-              )}
-              {canSubmit && !disabled && (
+              {!isEmpty(errors) && <ErrorMessage>{validationTexts.formFillError}</ErrorMessage>}
+              {!disabled && (
                 <ButtonContainer>
                   <Button
                     onClick={handleSubmit as any}
                     type="button"
-                    height={40}
-                    buttonPadding="6px 8px"
                     loading={loading}
                     disabled={disabled}
                   >
@@ -145,38 +135,39 @@ const Container = styled.div`
   justify-content: center;
 `;
 
+const StyledBackButton = styled(Button)`
+  width: fit-content;
+  padding: 0;
+  color: ${({ theme }) => theme.colors.primary};
+  gap: 4px;
+`;
+
 const ButtonContainer = styled.div`
-  margin-top: 8px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
+  width: fit-content;
 `;
 
 const Title = styled.div`
-  font-size: 3.2rem;
-  font-weight: bold;
-  color: #121926;
-  opacity: 1;
-  @media ${device.mobileL} {
-    font-size: 2.4rem;
-  }
+  color: #1d2430;
+  font-size: 2.4rem;
 `;
 
 const StyledForm = styled(Form)<{ two_column: number }>`
   display: flex;
   flex-direction: column;
-  flex-basis: 1200px;
+  flex-basis: ${({ two_column }) => (two_column ? '1200px' : '800px')};
 `;
 
 const StyledBackIcon = styled(Icon)`
   cursor: pointer;
-
-  font-size: 1.1rem;
-  align-self: center;
-  color: #000000;
+  font-size: 1.6rem;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
-const Row = styled.div<{ titleRowWidth?: number }>`
+const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -188,19 +179,8 @@ const Row = styled.div<{ titleRowWidth?: number }>`
 
 const InnerRow = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-`;
-
-const MessageContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr minmax(168px, 412px);
-
-  @media ${device.mobileL} {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const ErrorMessage = styled.div`
@@ -213,19 +193,7 @@ const ErrorMessage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 485.47px;
   flex: 2;
-  @media ${device.mobileL} {
-    width: 100%;
-  }
-`;
-
-const Invisible = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  flex: 1;
-
   @media ${device.mobileL} {
     width: 100%;
   }

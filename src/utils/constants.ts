@@ -20,6 +20,15 @@ export enum RolesTypes {
   ADMIN = 'ADMIN',
 }
 
+export enum ButtonColors {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary',
+  TERTIARY = 'tertiary',
+  DANGER = 'danger',
+  SUCCESS = 'success',
+  TRANSPARENT = 'transparent',
+}
+
 export enum ServerErrors {
   USER_NOT_FOUND = `Email not found.`,
   WRONG_PASSWORD = 'Wrong password.',

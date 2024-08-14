@@ -7,7 +7,7 @@ import { useGetCurrentProfile, useLogoutMutation } from '../../utils/hooks';
 import { handleSelectProfile } from '../../utils/loginFunctions';
 import { slugs } from '../../utils/slugs';
 import { buttonsTitles, inputLabels, menuLabels } from '../../utils/texts';
-import Icon from './Icons';
+import Icon, { IconName } from './Icons';
 
 interface MobileProfilesDropdownProps {
   hideMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,10 +24,10 @@ const MobileProfilesDropdown = ({ hideMenu }: MobileProfilesDropdownProps) => {
     <Container>
       <Select onClick={() => setShowSelect(!showSelect)}>
         <SelectContainer>
-          <ProfileName>{currentProfile?.name || '-'}</ProfileName>
+          <ProfileName>{currentProfile?.name || `${user.firstName} ${user.lastName}`}</ProfileName>
           <ProfileEmail>{currentProfile?.email || user?.email}</ProfileEmail>
         </SelectContainer>
-        <DropdownIcon name="showMore" />
+        <DropdownIcon name={IconName.showMore} />
       </Select>
       {showSelect && (
         <ProfilesContainer>
@@ -45,15 +45,16 @@ const MobileProfilesDropdown = ({ hideMenu }: MobileProfilesDropdownProps) => {
                 selected={selected}
               >
                 <div>
-                  <Name>{profile?.name || '-'}</Name>
+                  <Name>{profile?.name || `${user.firstName} ${user.lastName}`}</Name>
                   <Email>{profile?.email || user?.email}</Email>
                 </div>
-                {selected && <SelectedIcon name="active" />}
+                {selected && <SelectedIcon name={IconName.active} />}
               </ProfileContainer>
             );
           })}
           <Hr />
           <Tab
+            selected={false}
             onClick={() => {
               handleNavigate(slugs.profile, navigate, (show) => {
                 setShowSelect(show);
@@ -62,15 +63,18 @@ const MobileProfilesDropdown = ({ hideMenu }: MobileProfilesDropdownProps) => {
             }}
           >
             <TabIconContainer>
-              <TabIcon name={'person'} />
+              <TabIcon name={IconName.person} />
             </TabIconContainer>
-            <Name>{menuLabels.profile}</Name>
+            <Name>{menuLabels.profileInfo}</Name>
           </Tab>
           <Hr />
-          <BottomRow onClick={() => mutateAsync()}>
-            <StyledLogoutIcon name="exit" />
+
+          <Tab selected={false} onClick={() => mutateAsync()}>
+            <TabIconContainer>
+              <TabIcon name={IconName.exit} />
+            </TabIconContainer>
             <Name>{buttonsTitles.logout}</Name>
-          </BottomRow>
+          </Tab>
         </ProfilesContainer>
       )}
     </Container>
@@ -136,24 +140,30 @@ const ProfilesContainer = styled.div`
   background-color: white;
   box-shadow: 0px 4px 15px #12192614;
   border: 1px solid #cdd5df;
-  border-radius: 4px;
+  border-radius: 16px;
   width: 100%;
 `;
 
 const ProfileContainer = styled.div<{ selected: boolean }>`
   padding: 9px 12px;
-  border-radius: 2px;
-  border: 1px solid ${({ theme, selected }) => (selected ? theme.colors.primary : 'none')};
+  border-radius: 16px;
+  border: 1px solid ${({ theme, selected }) => (!selected ? theme.colors.border : 'none')};
+  background-color: ${({ theme, selected }) =>
+    selected ? `${theme.colors.secondary}` : 'transparent'};
+  color: ${({ theme, selected }) =>
+    selected ? theme.colors.primary : theme?.colors?.text?.secondary};
   display: flex;
+  align-items: center;
   justify-content: space-between;
   :hover {
-    background-color: #f8fafc;
+    background-color: ${({ theme }) => theme.colors.secondary};
     cursor: pointer;
   }
 `;
 
 const SelectedIcon = styled(Icon)`
   color: ${({ theme }) => theme.colors.primary};
+  font-size: 2.2rem;
 `;
 
 const Hr = styled.div`
@@ -162,13 +172,13 @@ const Hr = styled.div`
   opacity: 1;
 `;
 
-const Tab = styled.div`
-  padding: 5px 10px 0 0;
-  border-radius: 2px;
+const Tab = styled.div<{ selected: boolean }>`
+  padding: 8px 12px;
+  border-radius: 14px;
   display: flex;
-  align-items: center;
+  background-color: ${({ selected }) => (selected ? '#E9ECEF' : 'inherit')};
   :hover {
-    background-color: #f8fafc;
+    background-color: #e9ecef;
     cursor: pointer;
   }
 `;

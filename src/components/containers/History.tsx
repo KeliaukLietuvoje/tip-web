@@ -7,12 +7,11 @@ import styled from 'styled-components';
 import { device, theme } from '../../styles';
 import { intersectionObserverConfig } from '../../utils/configs';
 
-import { HistoryTypes } from '../../utils/constants';
+import { ButtonColors, HistoryTypes } from '../../utils/constants';
 import { formatDateAndTime } from '../../utils/format';
 import { handleAlert } from '../../utils/functions';
 import { formLabels } from '../../utils/texts';
 import { FormHistory } from '../../utils/types';
-import { ButtonColors } from '../buttons/Button';
 import Avatar from '../other/Avatar';
 import Icon from '../other/Icons';
 import LoaderComponent from '../other/LoaderComponent';

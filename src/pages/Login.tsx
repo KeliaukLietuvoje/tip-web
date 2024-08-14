@@ -1,16 +1,19 @@
+import { Button, PasswordField, TextField } from '@aplinkosministerija/design-system';
 import { useFormik } from 'formik';
 import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import api from '../api';
-import Button from '../components/buttons/Button';
-import PasswordField from '../components/fields/PasswordField';
-import TextField from '../components/fields/TextField';
-import Icon from '../components/other/Icons';
-import { handleAlert } from '../utils/functions';
-import { useEGatesSign, useUserInfo } from '../utils/hooks';
-import { handleUpdateTokens } from '../utils/loginFunctions';
-import { buttonsTitles, inputLabels, validationTexts } from '../utils/texts';
-import { loginSchema } from '../utils/validation';
+import Icon, { IconName } from '../components/other/Icons';
+import {
+  buttonsTitles,
+  handleAlert,
+  handleUpdateTokens,
+  inputLabels,
+  loginSchema,
+  useEGatesSign,
+  useUserInfo,
+  validationTexts,
+} from '../utils';
 
 interface LoginProps {
   email: string;
@@ -18,8 +21,8 @@ interface LoginProps {
 }
 
 export const Login = () => {
-  const env = process.env;
-  const isProdEnvironment = env?.REACT_APP_SENTRY_ENV === 'production';
+  const env = import.meta.env;
+  const isProdEnvironment = env?.VITE_SENTRY_ENV === 'production';
 
   const onSubmit = async ({ email, password }: { email: string; password: string }) => {
     const params = { email, password };
@@ -89,9 +92,9 @@ export const Login = () => {
               onChange={(e) => handleType('password', e)}
             />
             <ButtonContainer>
-              <StyledButton loading={loading} type="submit">
+              <Button width="100%" loading={loading} disabled={loading} type="submit">
                 {buttonsTitles.login}
-              </StyledButton>
+              </Button>
             </ButtonContainer>
             <OrContainer>
               <Or>
@@ -107,8 +110,14 @@ export const Login = () => {
       <StyledEGateButton
         type="button"
         isProdEnvironment={isProdEnvironment}
-        leftIcon={<Icon name="eGate" />}
+        width="100%"
+        left={
+          <IconContainer>
+            <Icon name={IconName.eGate} />
+          </IconContainer>
+        }
         loading={eGatesSignLoading}
+        disabled={eGatesSignLoading}
         onClick={() => eGatesMutation()}
       >
         {buttonsTitles.eGates}
@@ -117,13 +126,14 @@ export const Login = () => {
   );
 };
 
-const StyledButton = styled(Button)`
-  width: 100%;
-  max-width: 300px;
+const IconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledEGateButton = styled(Button)<{ isProdEnvironment: boolean }>`
-  margin-top: ${({ isProdEnvironment }) => (isProdEnvironment ? '100px' : '0px')};
+  margin-top: ${({ isProdEnvironment }) => (isProdEnvironment ? '70px' : '0px')};
 `;
 
 const ButtonContainer = styled.div`
@@ -177,7 +187,6 @@ const SeparatorLabel = styled.span`
   font: normal normal 600 16px/40px;
   letter-spacing: 1.02px;
   color: #0b1f518f;
-  background-color: white;
   padding: 0 8px;
   margin: 0 auto;
   vertical-align: middle;

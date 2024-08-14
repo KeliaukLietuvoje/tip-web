@@ -12,14 +12,14 @@ import { Profile } from './types';
 
 const routes = [
   {
-    label: menuLabels.profile,
+    label: menuLabels.profileInfo,
     slug: slugs.profile,
     dropDown: true,
     iconName: 'person',
     component: <ProfilePage />,
   },
   {
-    label: menuLabels.profile,
+    label: menuLabels.profileInfo,
     slug: slugs.forms,
     component: <Forms />,
   },
@@ -42,7 +42,7 @@ const routes = [
   },
 
   {
-    label: menuLabels.generateApiKey,
+    label: menuLabels.apiKey,
     slug: slugs.generateApiKey,
     iconName: 'key',
     dropDown: true,

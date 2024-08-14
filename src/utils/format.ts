@@ -1,7 +1,7 @@
 import { endOfDay, format, startOfDay } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 
-export const formatDate = (date: Date) => format(new Date(date), 'yyyy-MM-dd');
+export const formatDate = (date?: Date) => (date ? format(new Date(date), 'yyyy-MM-dd') : '-');
 
 export const formatDateTo = (date: Date) => {
   return utcToZonedTime(endOfDay(new Date(date)), 'Europe/Vilnius');

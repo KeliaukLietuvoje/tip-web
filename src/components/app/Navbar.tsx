@@ -22,8 +22,8 @@ const Menu = () => {
               {route.label}
             </Tab>
           ))}
-          <ProfilesDropdown />
         </TabContainer>
+        <ProfilesDropdown />
       </InnerContainer>
     </Header>
   );
@@ -49,13 +49,10 @@ const TabContainer = styled.div`
 `;
 
 const Header = styled.div`
-  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  border-bottom: 1px solid #cdd5df;
-  padding: 10px 20px 10px 20px;
 `;
 
 const InnerContainer = styled.div`
@@ -63,4 +60,7 @@ const InnerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: white;
+  padding: 10px 20px 10px 20px;
+  border-radius: 0 0 16px 16px;
 `;

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { handleNavigate } from '../../utils/functions';
 import { useFilteredRoutes } from '../../utils/hooks';
 import { externalRoutes } from '../../utils/slugs';
-import Icon from '../other/Icons';
+import Icon, { IconName } from '../other/Icons';
 import MobileProfilesDropdown from '../other/MobileProfilesDropdown';
 import AppLogo from './AppLogo';
 
@@ -20,16 +20,18 @@ const MobileHeader = () => {
         <Header>
           <AppLogo />
           <div onClick={() => setShowMenu(true)}>
-            <BurgerIcon name="burger" />
+            <BurgerIcon name={IconName.burger} />
           </div>
         </Header>
       ) : (
         <Container>
           <InfoContainer>
             <SecondRow>
+              <AppLogo isWhite={true} />
+
               <Title onClick={() => handleNavigate('/', navigate, setShowMenu)}></Title>
               <div onClick={() => setShowMenu(false)}>
-                <ExitIcon name="close" />
+                <ExitIcon name={IconName.close} />
               </div>
             </SecondRow>
             {externalRoutes.map((route, index) => {
@@ -37,7 +39,12 @@ const MobileHeader = () => {
                 <Tab
                   isActive={location.pathname.includes(route.slug)}
                   onClick={() => {
-                    route.internal ? navigate(route.slug) : window.open(route.slug, '_blank');
+                    if (route.internal) {
+                      navigate(route.slug);
+                    } else {
+                      window.open(route.slug, '_blank');
+                    }
+
                     setShowMenu(false);
                   }}
                   key={`tab-${index}`}
@@ -46,7 +53,6 @@ const MobileHeader = () => {
                 </Tab>
               );
             })}
-            <Hr />
             {(routes || [])
               .filter((route) => route.dropDown)
               .map((route, index) => {
@@ -145,12 +151,6 @@ const ExitIcon = styled(Icon)`
   font-size: 2rem;
   vertical-align: middle;
   color: white;
-`;
-
-const Hr = styled.div`
-  width: 50%;
-  margin: 10px 0 10px 0;
-  border-bottom: 1px solid #eeebe561;
 `;
 
 export default MobileHeader;

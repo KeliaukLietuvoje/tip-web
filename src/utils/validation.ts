@@ -2,6 +2,9 @@ import * as Yup from 'yup';
 import { availableMimeTypes } from './constants';
 import { validationTexts } from './texts';
 
+const urlRegex =
+  /^(https?:\/\/)?(www\.)?([a-z\d]([-a-z\d]{0,61}[a-z\d])?\.)+[a-z]{2,6}(:\d{1,5})?(\/.*)?$/i;
+
 export const validateCreateTenantUser = Yup.object().shape({
   firstName: Yup.string().required(validationTexts.requireText).nullable(),
   lastName: Yup.string().required(validationTexts.requireText).nullable(),
@@ -50,7 +53,10 @@ export const validateFormRowInfo = (values: { name: string; items: { [key: strin
 export const validateForm = Yup.object().shape({
   categories: Yup.array().min(1, validationTexts.requireSelect),
   seasons: Yup.array().min(1, validationTexts.requireSelect),
-  urlLT: Yup.string().required(validationTexts.requireText).url(validationTexts.badUrlFormat),
+  urlLT: Yup.string()
+    .required(validationTexts.requireText)
+    .trim()
+    .matches(urlRegex, validationTexts.badUrlFormat),
   nameLT: Yup.string().required(validationTexts.requireText).nullable(),
   descriptionLT: Yup.string().required(validationTexts.requireText).nullable(),
   geom: Yup.object().required(validationTexts.requireMap).nullable(),

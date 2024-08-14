@@ -1,13 +1,18 @@
+import { Button, SimpleContainer, TextField } from '@aplinkosministerija/design-system';
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 import api from '../api';
-import { LoaderComponent, TextField } from '../components';
-import Button from '../components/buttons/Button';
-import SimpleContainer from '../components/containers/SimpleContainer';
 import Icon from '../components/other/Icons';
+import LoaderComponent from '../components/other/LoaderComponent';
 import { Column } from '../styles/CommonStyles';
-import { handleAlert } from '../utils/functions';
-import { buttonsTitles, descriptions, formLabels, inputLabels } from '../utils/texts';
+import {
+  buttonsTitles,
+  descriptions,
+  formLabels,
+  handleAlert,
+  inputLabels,
+  pageTitles,
+} from '../utils';
 
 export interface UserProps {
   firstName?: string;
@@ -36,14 +41,16 @@ const GenerateApiKey = () => {
 
   return (
     <Container>
+      <Row>
+        <Title>{pageTitles.apiKey}</Title>
+      </Row>
       <SimpleContainer title={formLabels.apiKey}>
         <Column>
           <NoteText>{descriptions.apiKey}</NoteText>
-
           <TextField
             value={apiKey || tenant?.apiKey}
             label={inputLabels.apiKey}
-            rightIcon={
+            right={
               apiKey ? (
                 <IconContainer onClick={() => navigator.clipboard.writeText(apiKey)}>
                   <div>
@@ -54,22 +61,40 @@ const GenerateApiKey = () => {
               ) : undefined
             }
           />
-
-          <Row>
-            <Button loading={generateKey.isLoading} onClick={() => generateKey.mutateAsync()}>
-              {buttonsTitles.generate}
-            </Button>
-          </Row>
         </Column>
       </SimpleContainer>
+      <ButtonContainer>
+        <Button loading={generateKey.isLoading} onClick={() => generateKey.mutateAsync()}>
+          {buttonsTitles.generate}
+        </Button>
+      </ButtonContainer>
     </Container>
   );
 };
+
+const Title = styled.div`
+  color: #1d2430;
+  font-size: 2.4rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 0px;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: '100%';
+`;
 
 const NoteText = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 const Container = styled.div`
@@ -93,8 +118,12 @@ const IconContainer = styled.div`
   color: ${({ theme }) => theme.colors.primary};
 `;
 
-const Row = styled.div`
+const ButtonContainer = styled.div`
+  margin-top: 16px;
   display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
 `;
 
 export default GenerateApiKey;

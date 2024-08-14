@@ -1,7 +1,8 @@
+import { Button } from '@aplinkosministerija/design-system';
 import styled from 'styled-components';
 import { device } from '../../styles';
+import { ButtonColors } from '../../utils/constants';
 import { buttonsTitles } from '../../utils/texts';
-import Button, { ButtonColors } from '../buttons/Button';
 import Icon from './Icons';
 
 interface ActionContainerInterface {
@@ -39,8 +40,6 @@ const DeleteCard = ({
             variant={ButtonColors.TRANSPARENT}
             type="button"
             color="black"
-            height={32}
-            buttonPadding="6px 8px"
           >
             {buttonsTitles.cancel}
           </StyledButton>
@@ -48,8 +47,6 @@ const DeleteCard = ({
             type="button"
             onClick={() => onClick()}
             variant={ButtonColors.DANGER}
-            height={32}
-            buttonPadding="6px 8px"
             loading={loading}
             disabled={loading}
           >

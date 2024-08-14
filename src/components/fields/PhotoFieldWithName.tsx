@@ -1,12 +1,12 @@
+import { TextField } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { device } from '../../styles';
 import { handleAlert } from '../../utils/functions';
 import { buttonsTitles, inputLabels } from '../../utils/texts';
 import { FileProps } from '../../utils/types';
-import Icon from '../other/Icons';
+import Icon, { IconName } from '../other/Icons';
 import LoaderComponent from '../other/LoaderComponent';
-import TextField from './TextField';
 
 export interface PhotoFieldWithNameProps {
   photo: FileProps | File | any;
@@ -55,7 +55,7 @@ const PhotoFieldWithName = ({
           )}
 
           <ButtonRow onClick={handleDeleteClickClick}>
-            <StyledIcon name="deleteItem" />
+            <StyledIcon name={IconName.deleteItem} />
             <ButtonText>{buttonsTitles.delete}</ButtonText>
           </ButtonRow>
         </LabelRow>
@@ -99,7 +99,6 @@ const PhotoFieldWithName = ({
 const StyledIcon = styled(Icon)`
   cursor: pointer;
   font-size: 1.8rem;
-  color: ${({ theme }) => theme.colors.danger};
   margin-right: 8px;
   @media ${device.mobileL} {
     margin: 0;
@@ -109,14 +108,15 @@ const StyledIcon = styled(Icon)`
 const ButtonText = styled.div`
   font-size: 1.4rem;
   line-height: 17px;
-  color: #4b5565;
 `;
 
 const ButtonRow = styled.div`
   cursor: pointer;
   display: grid;
   grid-template-columns: 11px 1fr;
+  align-items: center;
   gap: 11px;
+  color: ${({ theme }) => theme.colors.danger};
 `;
 
 const LabelRow = styled.div`
@@ -162,7 +162,7 @@ const StyledImg = styled.img<{
   max-width: 100%;
 `;
 
-const ImageContainer = styled.div<{}>`
+const ImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;

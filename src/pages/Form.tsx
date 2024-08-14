@@ -1,53 +1,61 @@
+import {
+  AsyncMultiSelectField,
+  AsyncSelectField,
+  ButtonsGroup,
+  CheckBox,
+  MapField,
+  MultiSelectField,
+  NumericTextField,
+  SimpleContainer,
+  TextAreaField,
+  TextField,
+} from '@aplinkosministerija/design-system';
 import { isEmpty } from 'lodash';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import api from '../api';
 import {
-  AsyncMultiSelect,
-  AsyncSelectField,
-  ButtonsGroup,
-  Checkbox,
   ColumnOne,
+  ColumnTwo,
   Container,
   FormPageWrapper,
   FormRow,
   LoaderComponent,
-  Map,
-  MultiSelect,
   PhotoUploadFieldWithNames,
-  SimpleContainer,
-  TextAreaField,
-  TextField,
+  Switch,
 } from '../components';
-import Switch from '../components/buttons/Switch';
 import FormHistoryContainer from '../components/containers/History';
-import NumericTextField from '../components/fields/NumericTextField';
-import { ColumnTwo } from '../styles/CommonStyles';
-import { Season, StatusTypes } from '../utils/constants';
+import Icon, { IconName } from '../components/other/Icons';
 import {
+  buttonsTitles,
+  Category,
+  deleteDescriptionFirstPart,
+  deleteDescriptionSecondPart,
+  DeleteInfoProps,
+  deleteTitles,
+  descriptions,
+  FeatureCollection,
+  formHistoryLabels,
+  formLabels,
   getAdditionalInfoOption,
   getCategoriesOptions,
+  getSeasonOptions,
   getSubCategoriesOptions,
   getVisitInfoOptions,
   handleAlert,
-  isNew,
-} from '../utils/functions';
-import { getSeasonOptions } from '../utils/options';
-import { slugs } from '../utils/slugs';
-import {
-  buttonsTitles,
-  deleteDescriptionFirstPart,
-  deleteDescriptionSecondPart,
-  deleteTitles,
-  formHistoryLabels,
-  formLabels,
+  Info,
   inputLabels,
+  isNew,
+  mapsHost,
   pageTitles,
+  Season,
   seasonLabels,
-} from '../utils/texts';
-import { Category, DeleteInfoProps, FeatureCollection, Info, VisitDuration } from '../utils/types';
-import { validateForm } from '../utils/validation';
+  slugs,
+  StatusTypes,
+  validateForm,
+  VisitDuration,
+} from '../utils';
 
 interface FormProps {
   visitDuration?: VisitDuration;
@@ -87,7 +95,7 @@ const FormPage = () => {
   const disabled = !isNew(id) && !form?.canEdit;
   const title = isNew(id) ? pageTitles.newForm : form?.nameLT || '';
 
-  const mapQueryString = !disabled ? '?types[]=point' : '?preview=true';
+  const mapPath = !disabled ? '/edit?types[]=point' : '/edit?preview=true';
 
   const removeForm = useMutation(() => api.deleteForm(id), {
     onError: () => {
@@ -136,7 +144,6 @@ const FormPage = () => {
     onError: () => {
       handleAlert();
     },
-    onSuccess: () => {},
     retry: false,
   });
 
@@ -162,7 +169,7 @@ const FormPage = () => {
 
     if (isEmpty(form?.seasons)) return [Season.ALL];
 
-    return form?.seasons!;
+    return form?.seasons || [];
   };
 
   const initialValues: FormProps = {
@@ -188,6 +195,8 @@ const FormPage = () => {
     return <LoaderComponent />;
   }
 
+  const showPhotoContainer = !disabled || !isEmpty(form?.photos);
+
   const renderForm = (values: FormProps, errors: any, handleChange: any) => {
     const hasCategories = !isEmpty(values?.categories);
 
@@ -204,9 +213,11 @@ const FormPage = () => {
     };
 
     const handleRemovePhoto = async (index) => {
+      if (!values?.photos) return;
+
       handleChange('photos', [
-        ...values.photos?.slice(0, index as number),
-        ...values.photos?.slice((index as number) + 1),
+        ...values.photos.slice(0, index as number),
+        ...values.photos.slice((index as number) + 1),
       ]);
     };
 
@@ -232,7 +243,7 @@ const FormPage = () => {
           <ColumnOne>
             <SimpleContainer title={formLabels.categories}>
               <FormRow columns={hasCategories ? 2 : 1}>
-                <AsyncMultiSelect
+                <AsyncMultiSelectField
                   label={inputLabels.categories}
                   values={values?.categories}
                   disabled={disabled}
@@ -246,13 +257,13 @@ const FormPage = () => {
                   loadOptions={(input, page) => getCategoriesOptions(input, page)}
                 />
                 {hasCategories && (
-                  <AsyncMultiSelect
+                  <AsyncMultiSelectField
                     label={inputLabels.subCategories}
                     dependantValue={values?.categories?.map((item) => item?.id)}
                     values={values?.subCategories}
+                    name="subCategories"
                     disabled={disabled}
                     error={errors.subCategories}
-                    name="subCategories"
                     onChange={(categories) => {
                       handleChange('subCategories', categories);
                     }}
@@ -279,7 +290,6 @@ const FormPage = () => {
                   value={values?.urlLT}
                   error={errors?.urlLT}
                   disabled={disabled}
-                  placeholder={'https://www.test.lt'}
                   name="urlLT"
                   onChange={(objectName) => handleChange('urlLT', objectName)}
                 />
@@ -313,7 +323,6 @@ const FormPage = () => {
                   disabled={disabled}
                   name="url"
                   onChange={(url) => handleChange('url', url)}
-                  placeholder={'https://www.test.lt'}
                 />
               </FormRow>
               <FormRow columns={1}>
@@ -328,36 +337,46 @@ const FormPage = () => {
               </FormRow>
             </SimpleContainer>
             <SimpleContainer title={formLabels.map}>
-              <Map
-                queryString={mapQueryString}
+              <MapField
+                mapPath={mapPath}
+                mapHost={mapsHost}
                 error={errors?.geom}
-                onSave={(data) => handleChange('geom', data)}
+                onChange={(data) => {
+                  handleChange('geom', data);
+                }}
                 value={values?.geom}
                 height={'300px'}
               />
             </SimpleContainer>
-            <SimpleContainer title={formLabels.photos}>
-              <PhotoUploadFieldWithNames
-                name={'photos'}
-                photos={values.photos ? values.photos : []}
-                handleDelete={handleRemovePhoto}
-                onUpload={handleUpload}
-                disabled={disabled}
-                getSrc={(photo) => photo.url}
-                getName={(photo) => photo.name}
-                getAuthor={(photo) => photo.author}
-                onChangeAuthor={(input, index) => handleChange(`photos.${index}.author`, input)}
-                onChangeName={(input, index) => handleChange(`photos.${index}.name`, input)}
-              />
-            </SimpleContainer>
+            {showPhotoContainer && (
+              <SimpleContainer title={formLabels.photos}>
+                <SubTItle>
+                  <IconContainer>
+                    <InfoIcon name={IconName.info} />
+                  </IconContainer>
+                  {descriptions.photoAuthor}
+                </SubTItle>
+                <PhotoUploadFieldWithNames
+                  name={'photos'}
+                  photos={values.photos ? values.photos : []}
+                  handleDelete={handleRemovePhoto}
+                  onUpload={handleUpload}
+                  disabled={disabled}
+                  getSrc={(photo) => photo.url}
+                  getName={(photo) => photo.name}
+                  getAuthor={(photo) => photo.author}
+                  onChangeAuthor={(input, index) => handleChange(`photos.${index}.author`, input)}
+                  onChangeName={(input, index) => handleChange(`photos.${index}.name`, input)}
+                />
+              </SimpleContainer>
+            )}
             <SimpleContainer title={formLabels.additionalInfo}>
               <FormRow columns={2}>
-                <MultiSelect
+                <MultiSelectField
                   label={inputLabels.season}
                   values={values?.seasons}
                   disabled={disabled}
                   error={errors?.seasons}
-                  name="seasons"
                   onChange={(seasons) => handleChange('seasons', seasons)}
                   getOptionLabel={(option) => seasonLabels[option]}
                   getOptionValue={(option) => option}
@@ -374,12 +393,12 @@ const FormPage = () => {
                   loadOptions={(input: string, page: number) => getVisitInfoOptions(input, page)}
                 />
 
-                <AsyncMultiSelect
+                <AsyncMultiSelectField
                   label={inputLabels.additionalInfo}
+                  name="additionalInfos"
                   values={values?.additionalInfos}
                   error={errors?.additionalInfos}
                   disabled={disabled}
-                  name="additionalInfosInput"
                   onChange={(additionalInfos) => handleChange('additionalInfos', additionalInfos)}
                   getOptionLabel={(option) => option?.name}
                   loadOptions={(input: string, page: number) =>
@@ -413,6 +432,7 @@ const FormPage = () => {
               </FormRow>
             </SimpleContainer>
             <SimpleContainer title={formLabels.visitDuration}>
+              <SubTItle>{descriptions.durationTime}</SubTItle>
               <FormRow columns={5}>
                 <NumericTextField
                   label={inputLabels.from}
@@ -432,7 +452,7 @@ const FormPage = () => {
                 />
               </FormRow>
               <FormRow columns={1}>
-                <Checkbox
+                <CheckBox
                   value={values?.visitDuration?.isAllDay}
                   disabled={disabled}
                   label={inputLabels.allDay}
@@ -461,6 +481,7 @@ const FormPage = () => {
   }
   return (
     <FormPageWrapper
+      disabled={disabled}
       title={title}
       twoColumn={!isNew(id)}
       initialValues={initialValues}
@@ -476,4 +497,24 @@ export default FormPage;
 const SwitchContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
+`;
+
+const InfoIcon = styled(Icon)``;
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SubTItle = styled.div`
+  margin-top: -8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 15.6px;
+  color: ${({ theme }) => theme?.colors?.text?.secondary};
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
 `;

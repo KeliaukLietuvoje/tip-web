@@ -8,7 +8,13 @@ export const emptyStateLabels = {
 };
 
 export const descriptions = {
-  cantLogin: 'Norint prisijungti turi būti suteikta prieiga',
+  photoAuthor:
+    'Nenurodžius autorystės, nuotraukos autoriumi automatiškai bus nurodytas subjektas įkėlęs nuotrauką į TIP',
+  durationTime:
+    'Lankymo trukmė – kiek, tikėtina, kad turistas praleis laiko besilankydamas šiame objekte?',
+  tip: 'Turistinių išteklių posistemė',
+  cantLogin:
+    'Kreipkitės į savo organizacijos atstovą, kad jis pridėtų Jus prie organizacijos. Jeigu kuriate naują organizaciją - kreipkitės į elpastas@adresas.lt.',
   apiKey:
     'Kuomet API raktas yra sugeneruojamas, jį nukopijuokite ir saugokite saugiai. Saugumo sumetimais jis nebus rodomas pakartotinai. Svarbu atsiminti, kad sugeneravus naują API raktą, senasis nustoja galioti',
   getDataAboutPlaces:
@@ -22,9 +28,9 @@ export const descriptions = {
   instructionSentDescription: 'Jūsų nurodytu el. paštu išsiuntėme prisijungimo instrukciją',
   resetPasswordDescription: 'Naujas slaptažodis neturi sutapti su senuoju slaptažodžiu',
   tableNotFound: 'Atsiprašome nieko neradome pagal pasirinktus filtrus',
-  footerTitle: '© Keliauk Lietuvoje',
+  footerTitle: '© VšĮ „Keliauk Lietuvoje“',
   footerDescription:
-    'Duomenys apie įmonę kaupiami ir saugomi Juridinių asmenų registre. Įmonės kodas: 188602370 | Adresas: A. Jakšto g. 4, 01105 Vilnius Telefonas: 8 706 63661 | El. paštas: info@am.lt',
+    'Duomenys apie įmonę kaupiami ir saugomi Juridinių asmenų registre. Įmonės kodas: 304971997 | Adresas: Gedimino pr. 38, LT-01104 Vilnius Telefonas: +370 698 035 09 | El. paštas: info@lithuania.travel',
 };
 export const emptyStateUrlLabels = {
   form: 'naują  turizmo objektą',
@@ -32,12 +38,7 @@ export const emptyStateUrlLabels = {
   request: 'naują prašymą',
 };
 
-export const mapsHost = process.env.REACT_APP_MAPS_HOST || 'https://maps.tip.ntis.lt';
-
-export const url = {
-  new: 'naujas',
-  DRAW: `${mapsHost}/edit`,
-};
+export const mapsHost = import.meta.env.VITE_MAPS_HOST || 'https://maps.biip.lt';
 
 export const subTitles = {
   dataUpdate: 'Duomenų koregavimas',
@@ -63,38 +64,6 @@ export const usersLabels = {
   phone: { label: 'Telefono numeris', show: true },
 };
 
-export const tenantUsersColumns = {
-  fullName: { label: 'Vardas, pavardė', show: true },
-  email: { label: 'Elektroninis paštas', show: true },
-  role: { label: 'Teisė', show: true },
-};
-
-export const formTableLabels = {
-  name: {
-    label: 'Pavadinimas',
-    mobileOrder: 1,
-    desktopOrder: 1,
-    show: true,
-  },
-  createdAt: {
-    label: 'Duomenų įvedimo data',
-    mobileOrder: 3,
-    desktopOrder: 2,
-    show: true,
-  },
-  createdBy: {
-    label: 'Sukūrė',
-    mobileOrder: 4,
-    desktopOrder: 3,
-    show: true,
-  },
-  status: {
-    label: 'Būsena',
-    mobileOrder: 2,
-    desktopOrder: 7,
-    show: true,
-  },
-};
 export const pageTitles = {
   form: (id: string) => `Anketa nr. ${id}`,
   profile: 'Profilis',
@@ -104,14 +73,15 @@ export const pageTitles = {
   forms: 'Turizmo objektai',
   users: 'Naudotojai',
   updateProfile: 'Atnaujinti profilį',
-  tenantUsers: 'Įmonės darbuotojai',
+  tenantUsers: 'Įstaigos darbuotojai',
+  apiKey: 'API rakto generavimas',
 };
 
 export const menuLabels = {
-  forms: 'Turizmo objektai',
-  profile: 'Profilis',
-  tenantUsers: 'Įmonės darbuotojai',
-  generateApiKey: 'Generuoti api raktą',
+  forms: 'Turizmo išteklių objektai',
+  profileInfo: 'Profilio informacija',
+  tenantUsers: 'Įstaigos darbuotojai',
+  apiKey: 'API raktas',
   myProfile: 'MANO PASKYRA',
 };
 export const buttonsTitles = {
@@ -140,7 +110,7 @@ export const buttonsTitles = {
   filter: 'Filtruoti',
   resetPassword: 'Atstatyti slaptažodį',
   createPassword: 'Nustatyti slaptažodį',
-  eGates: 'Prisijungti per el. valdžios vartus',
+  eGates: 'Prisijungti per El. valdžios vartus',
   edit: 'Atnaujinti',
   view: 'Peržiūrėti',
   removeTenantUser: 'Pašalinti darbuotoją',
@@ -155,7 +125,7 @@ export const buttonsTitles = {
 };
 
 export const formLabels = {
-  inActiveProfile: 'Anketa neaktyvi',
+  accessNotGranted: 'Nesuteikta prieiga',
   visitDuration: 'Lankymo trukmė (valandos)',
   apiKey: 'Rakto generavimo informacija',
   categories: 'Kategorijos',
@@ -199,7 +169,7 @@ export const inputLabels = {
   categories: 'Kategorijos',
   parentCategory: 'Tėvinė kategorija',
   description: 'Aprašymas',
-  url: 'Interneto puslapis',
+  url: 'Interneto puslapio adresas',
   audio: 'Audiogido nuoroda',
   subCategories: 'Subkategorijos',
   hydrostaticId: 'Hidrostatinio unikalus identifikatorius',
@@ -213,7 +183,7 @@ export const inputLabels = {
   pressToWant: 'Paspauskite norėdami',
   uploadOrDragFilesHere: 'įkelti arba įtempkite failus čia',
   fileTypesAndMaxSize: 'PDF, PNG, JPEG, JPG (maks. 20MB)',
-  profiles: 'PASKYROS',
+  profiles: 'Paskyros',
   firstName: 'Vardas',
   lastName: 'Pavardė',
   phone: 'Telefonas',

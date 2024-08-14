@@ -12,10 +12,10 @@ const Switch = ({ checked = false, onChange, enabledLabel, disabledLabel }: Swit
 
   return (
     <>
-      <StyledInput onChange={() => {}} checked={checked} type="checkbox" />
       <Container>
         <StyledLabel onClick={onChange} checked={checked}>
           <span />
+          <StyledInput checked={checked} type="checkbox" />
         </StyledLabel>
         <Label checked={checked}>{label}</Label>
       </Container>
@@ -30,6 +30,7 @@ const Container = styled.div`
   grid-template-columns: 40px 1fr;
   gap: 12px;
   cursor: 'pointer';
+  align-items: center;
 `;
 
 const Label = styled.div<{ checked: boolean }>`

@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
@@ -13,6 +14,8 @@ const Profiles = () => {
   const [loading, setLoading] = useState(false);
   const { mutateAsync } = useLogoutMutation();
 
+  const hasProfiles = !isEmpty(user.profiles);
+
   const handleSelect = (profileId: string) => {
     setLoading(true);
     handleSelectProfile(profileId);
@@ -25,14 +28,18 @@ const Profiles = () => {
       <Container>
         <Title>{formLabels.selectProfile}</Title>
         <InnerContainer>
-          {user.profiles?.map((profile) => (
-            <div key={profile?.id} onClick={() => handleSelect(profile.id)}>
-              <ProfileCard
-                name={profile.name || `${user.firstName} ${user.lastName}`}
-                email={profile.email || user.email || '-'}
-              />
-            </div>
-          ))}
+          {hasProfiles ? (
+            user.profiles?.map((profile) => (
+              <div key={profile?.id} onClick={() => handleSelect(profile.id)}>
+                <ProfileCard
+                  name={profile.name || `${user.firstName} ${user.lastName}`}
+                  email={profile.email || user.email || '-'}
+                />
+              </div>
+            ))
+          ) : (
+            <div>Neturite profilių</div>
+          )}
           <Row onClick={() => mutateAsync()}>
             <Icon name="exit" />
             <BackButton> {buttonsTitles.logout}</BackButton>

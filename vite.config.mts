@@ -14,7 +14,6 @@ export default () => {
         open: env.VITE_BASE_URL,
         '/api': {
           target: env.VITE_PROXY_URL,
-
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },

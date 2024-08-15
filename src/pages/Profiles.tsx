@@ -1,37 +1,17 @@
-import { Button, CheckBox } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
-import api from '../api';
 import Icon from '../components/other/Icons';
 import LoaderComponent from '../components/other/LoaderComponent';
-import Modal from '../components/other/Modal';
 import ProfileCard from '../components/other/ProfileCard';
 import { useAppSelector } from '../state/hooks';
-import { device } from '../styles';
-import {
-  buttonsTitles,
-  formLabels,
-  handleSelectProfile,
-  inputLabels,
-  useLogoutMutation,
-} from '../utils';
+import { buttonsTitles, formLabels, handleSelectProfile, useLogoutMutation } from '../utils';
 const cookies = new Cookies();
 
 const Profiles = () => {
   const user = useAppSelector((state) => state?.user?.userData);
   const [loading, setLoading] = useState(false);
   const { mutateAsync } = useLogoutMutation();
-  const [agree, setAgree] = useState(false);
-  const token = cookies.get('token');
-  const queryClient = useQueryClient();
-
-  const updateAgreeToTermsOfService = useMutation(api.agreeToTermsOfService, {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries([token]);
-    },
-  });
 
   const handleSelect = (profileId: string) => {
     setLoading(true);
@@ -42,26 +22,6 @@ const Profiles = () => {
 
   return (
     <>
-      <Modal visible={!user.isAgreedToTermsOfService}>
-        <InnerWrapper>
-          <StyledIframe
-            width={'100%'}
-            height={'100%'}
-            allowFullScreen={true}
-            src={'./termsOfService.pdf#toolbar=0&navpanes=0&scrollbar=0'}
-          />
-          <CheckBox
-            value={agree}
-            label={inputLabels.agreeWithTermsOfService}
-            onChange={(value) => setAgree(value)}
-          />
-          <ButtonContainer>
-            <Button disabled={!agree} onClick={() => updateAgreeToTermsOfService.mutateAsync()}>
-              {buttonsTitles.agree}
-            </Button>
-          </ButtonContainer>
-        </InnerWrapper>
-      </Modal>
       <Container>
         <Title>{formLabels.selectProfile}</Title>
         <InnerContainer>
@@ -87,37 +47,6 @@ export default Profiles;
 
 const Container = styled.div`
   width: 100%;
-`;
-
-const StyledIframe = styled.iframe<{
-  height: string;
-  width: string;
-}>`
-  width: ${({ width }) => width};
-  height: ${({ height }) => height};
-`;
-
-const InnerWrapper = styled.div`
-  background-color: white;
-  border: 1px #dfdfdf solid;
-  border-radius: 4px;
-  margin: auto;
-  width: 700px;
-  height: 700px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  @media ${device.mobileL} {
-    padding: 16px;
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
 `;
 
 const BackButton = styled.div`

@@ -14,7 +14,7 @@ export const descriptions = {
     'Lankymo trukmė – kiek, tikėtina, kad turistas praleis laiko besilankydamas šiame objekte?',
   tip: 'Turistinių išteklių posistemė',
   cantLogin:
-    'Kreipkitės į savo organizacijos atstovą, kad jis pridėtų Jus prie organizacijos. Jeigu kuriate naują organizaciją - kreipkitės į elpastas@adresas.lt.',
+    'Kreipkitės į savo organizacijos atstovą, kad jis pridėtų Jus prie organizacijos. Jeigu kuriate naują organizaciją - kreipkitės į ',
   apiKey:
     'Kuomet API raktas yra sugeneruojamas, jį nukopijuokite ir saugokite saugiai. Saugumo sumetimais jis nebus rodomas pakartotinai. Svarbu atsiminti, kad sugeneravus naują API raktą, senasis nustoja galioti',
   getDataAboutPlaces:

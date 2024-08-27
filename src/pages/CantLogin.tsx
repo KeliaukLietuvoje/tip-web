@@ -7,12 +7,23 @@ export const CantLogin = () => {
     <>
       <Container>
         <H1>{formLabels.accessNotGranted}</H1>
-        <Description>{descriptions.cantLogin} </Description>
+        <Description>
+          {descriptions.cantLogin}{' '}
+          <Url target="_blank" href="mailto:info@ntis.lt">
+            info@ntis.lt
+          </Url>
+        </Description>
       </Container>
       <ReturnToLogin />
     </>
   );
 };
+
+const Url = styled.a`
+  text-decoration: underline;
+  font-size: 1.4rem;
+  color: #121926;
+`;
 
 const Description = styled.div`
   font-size: 1.6rem;

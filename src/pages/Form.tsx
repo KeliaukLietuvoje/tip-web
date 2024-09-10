@@ -235,7 +235,10 @@ const FormPage = () => {
               checked={form?.isActive}
               enabledLabel={'Aktyvus objektas'}
               disabledLabel={'Objektas laikinai neveikia'}
-              onChange={disable.mutateAsync}
+              onChange={() => {
+                console.log('test');
+                disable.mutateAsync();
+              }}
             />
           </SwitchContainer>
         )}

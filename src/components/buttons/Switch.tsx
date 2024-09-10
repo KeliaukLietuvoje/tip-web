@@ -13,9 +13,9 @@ const Switch = ({ checked = false, onChange, enabledLabel, disabledLabel }: Swit
   return (
     <>
       <Container>
-        <StyledLabel onClick={onChange} checked={checked}>
+        <StyledLabel checked={checked}>
           <span />
-          <StyledInput checked={checked} type="checkbox" />
+          <StyledInput onClick={onChange} checked={checked} type="checkbox" />
         </StyledLabel>
         <Label checked={checked}>{label}</Label>
       </Container>

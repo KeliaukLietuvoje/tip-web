@@ -10,7 +10,7 @@ interface GetAll {
   page?: number | string;
   populate?: string[];
   filter?: string | any;
-  query?: string;
+  query?: any;
   pageSize?: string;
   search?: string;
   searchFields?: string[];
@@ -103,35 +103,32 @@ class Api {
     return data;
   };
 
-  getAll = async ({
+  get = async ({
     resource,
     page,
-    populate,
-    sort,
-    filter,
+
     pageSize,
-    search,
-    query,
-    searchFields,
-    scope,
-    fields,
+    ...rest
   }: GetAll) => {
     const config = {
       params: {
         pageSize: pageSize || 10,
-        ...(!!populate && { populate }),
-        ...(!!searchFields && { searchFields }),
-        ...(!!search && { search }),
         page: page || 1,
-        ...(!!filter && { filter }),
-        ...(!!sort && { sort }),
-        ...(!!query && { query }),
-        ...(!!scope && { scope }),
-        ...(!!fields && { fields }),
+        ...rest,
       },
     };
 
     return this.errorWrapper(() => this.axios.get(`/${resource}`, config));
+  };
+
+  getAll = async ({ resource, ...rest }: GetAll) => {
+    const config = {
+      params: {
+        ...rest,
+      },
+    };
+
+    return this.errorWrapper(() => this.axios.get(`/${resource}/all`, config));
   };
 
   getOne = async ({ resource, id, populate, scope }: GetOne) => {
@@ -207,7 +204,7 @@ class Api {
     pageSize,
     query,
   }: TableList<FormFiltersProps>): Promise<GetAllResponse<Form>> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.FORMS,
       populate: [Resources.CREATED_BY],
       sort: [SortFields.CREATED_AT],
@@ -221,8 +218,6 @@ class Api {
     await this.getOne({
       resource: Resources.FORMS,
       populate: [
-        Resources.CATEGORIES,
-        Populations.SUB_CATEGORIES,
         Populations.CAN_EDIT,
         Populations.ATTENDANCE_INFO,
         Populations.GEOM,
@@ -233,7 +228,7 @@ class Api {
       id,
     });
   getFormGroups = async (): Promise<Group[]> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.FORMS_GROUPS,
       populate: [Populations.CHILDREN],
     });
@@ -270,7 +265,7 @@ class Api {
     page,
     pageSize,
   }: TableList<UserFilters>): Promise<GetAllResponse<User>> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.USERS,
       page,
       populate: [Populations.ROLE],
@@ -331,7 +326,7 @@ class Api {
     });
 
   getAttendanceInfos = async ({ filter, page, query }: TableList): Promise<any[]> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.ATTENDANCE_INFOS,
       query,
       page,
@@ -339,7 +334,7 @@ class Api {
     });
 
   getAdditionalInfos = async ({ filter, page, query }: TableList): Promise<any[]> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.ADDITIONAL_INFOS,
       query,
       page,
@@ -347,16 +342,27 @@ class Api {
     });
 
   getCategories = async ({ filter, page, query }: TableList): Promise<GetAllResponse<Category>> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.CATEGORIES,
       populate: [Populations.CHILDREN],
       query,
+
+      page,
+      filter,
+    });
+
+  getAllCategories = async ({ filter, page }: TableList): Promise<Category[]> =>
+    await this.getAll({
+      resource: Resources.CATEGORIES,
+      populate: [Populations.CHILDREN],
+      query: { parent: { $exists: false } },
+      fields: ['id', 'name', 'children'],
       page,
       filter,
     });
 
   getVisitInfos = async ({ filter, page, query }: TableList): Promise<any[]> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.VISIT_INFOS,
       query,
       page,
@@ -364,7 +370,7 @@ class Api {
     });
 
   getAttendanceTimes = async ({ filter, page, query }: TableList): Promise<any[]> =>
-    await this.getAll({
+    await this.get({
       resource: Resources.ATTENDANCE_TIMES,
       query,
       page,
@@ -378,7 +384,7 @@ class Api {
     });
 
   getFormHistory = async ({ page, pageSize, id }: TableList) =>
-    await this.getAll({
+    await this.get({
       resource: `${Resources.FORMS}/${id}/${Resources.HISTORY}`,
       page,
       pageSize,

@@ -253,6 +253,7 @@ const FormPage = () => {
                   treeCheckable
                   onChange={(categories) => handleChange('categories', categories)}
                   placeholder="Pasirinkite"
+                  disabled={disabled}
                 />
               </FormRow>
             </SimpleContainer>

@@ -3,6 +3,8 @@ import {
   AsyncSelectField,
   ButtonsGroup,
   CheckBox,
+  device,
+  FieldWrapper,
   MapField,
   MultiSelectField,
   NumericTextField,
@@ -30,7 +32,6 @@ import FormHistoryContainer from '../components/containers/History';
 import Icon, { IconName } from '../components/other/Icons';
 import {
   buttonsTitles,
-  Category,
   deleteDescriptionFirstPart,
   deleteDescriptionSecondPart,
   DeleteInfoProps,
@@ -71,12 +72,12 @@ interface FormProps {
   isPaid: boolean;
   isAdaptedForForeigners: boolean;
   seasons: Season[];
-  categories: Category[];
-  subCategories: Category[];
+  categories: number[];
   photos: any[];
 }
 
 const FormPage = () => {
+  const { SHOW_PARENT } = TreeSelect;
   const navigate = useNavigate();
   const { id = '' } = useParams();
   const seasonOptions = getSeasonOptions();
@@ -172,7 +173,7 @@ const FormPage = () => {
   };
 
   const initialValues: FormProps = {
-    categories: form?.categories || [],
+    categories: form?.categories ? form.categories.map(Number) : [],
     visitInfo: form?.visitInfo,
     seasons: getSeasons(),
     visitDuration: form?.visitDuration,
@@ -186,7 +187,6 @@ const FormPage = () => {
     geom: form?.geom,
     isPaid: form?.isPaid || false,
     isAdaptedForForeigners: form?.isAdaptedForForeigners || false,
-    subCategories: form?.subCategories || [],
     photos: form?.photos || [],
   };
 
@@ -243,18 +243,28 @@ const FormPage = () => {
           <ColumnOne>
             <SimpleContainer title={formLabels.categories}>
               <FormRow columns={1}>
-                <StyledTreeSelect
-                  error={errors.categories}
-                  value={values?.categories || []}
-                  treeData={categories}
-                  suffixIcon={<StyledIcons name={IconName.dropdownArrow} />}
-                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  fieldNames={{ label: 'name', children: 'children', value: 'id' }}
-                  treeCheckable
-                  onChange={(categories) => handleChange('categories', categories)}
-                  placeholder="Pasirinkite"
-                  disabled={disabled}
-                />
+                <TreeSelectContainer>
+                  <RelativeFieldWrapper
+                    error={errors.categories}
+                    showError={true}
+                    label={inputLabels.categories}
+                  >
+                    <StyledTreeSelect
+                      error={errors.categories}
+                      value={values?.categories || []}
+                      treeData={categories}
+                      style={{ width: '100%' }}
+                      suffixIcon={<StyledIcons name={IconName.dropdownArrow} />}
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      fieldNames={{ label: 'name', children: 'children', value: 'id' }}
+                      treeCheckable
+                      onChange={(categories) => handleChange('categories', categories)}
+                      placeholder="Pasirinkite"
+                      showCheckedStrategy={SHOW_PARENT}
+                      disabled={disabled}
+                    />
+                  </RelativeFieldWrapper>
+                </TreeSelectContainer>
               </FormRow>
             </SimpleContainer>
             <SimpleContainer title={formLabels.LTInfo}>
@@ -542,4 +552,15 @@ const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
     animation-duration: 0s !important;
     transition: none !important;
   }
+`;
+
+const TreeSelectContainer = styled.div`
+  display: block;
+  @media ${device.mobileL} {
+    border: none;
+  }
+`;
+
+const RelativeFieldWrapper = styled(FieldWrapper)`
+  position: relative;
 `;

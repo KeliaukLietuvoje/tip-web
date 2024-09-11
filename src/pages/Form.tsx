@@ -541,6 +541,14 @@ const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
     padding-top:4px;
   }
 
+  .ant-select-selector,
+  .ant-select-disabled {
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${({ disabled }) => (disabled ? 0.48 : 1)};
+    background: white !important;
+  }
+
+
   .ant-select-selector:focus-within {
     border-color: ${({ theme }) =>
       theme.colors.fields?.borderFocus || theme.colors.fields?.border || '#d4d5de'} !important;

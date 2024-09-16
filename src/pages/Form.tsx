@@ -3,6 +3,8 @@ import {
   AsyncSelectField,
   ButtonsGroup,
   CheckBox,
+  device,
+  FieldWrapper,
   MapField,
   MultiSelectField,
   NumericTextField,
@@ -10,6 +12,7 @@ import {
   TextAreaField,
   TextField,
 } from '@aplinkosministerija/design-system';
+import { TreeSelect } from 'antd';
 import { isEmpty } from 'lodash';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,7 +32,6 @@ import FormHistoryContainer from '../components/containers/History';
 import Icon, { IconName } from '../components/other/Icons';
 import {
   buttonsTitles,
-  Category,
   deleteDescriptionFirstPart,
   deleteDescriptionSecondPart,
   DeleteInfoProps,
@@ -39,9 +41,7 @@ import {
   formHistoryLabels,
   formLabels,
   getAdditionalInfoOption,
-  getCategoriesOptions,
   getSeasonOptions,
-  getSubCategoriesOptions,
   getVisitInfoOptions,
   handleAlert,
   Info,
@@ -72,12 +72,12 @@ interface FormProps {
   isPaid: boolean;
   isAdaptedForForeigners: boolean;
   seasons: Season[];
-  categories: Category[];
-  subCategories: Category[];
+  categories: number[];
   photos: any[];
 }
 
 const FormPage = () => {
+  const { SHOW_PARENT } = TreeSelect;
   const navigate = useNavigate();
   const { id = '' } = useParams();
   const seasonOptions = getSeasonOptions();
@@ -89,6 +89,8 @@ const FormPage = () => {
     },
     enabled: !isNew(id),
   });
+
+  const { data: categories = [] } = useQuery(['categories'], () => api.getAllCategories({}), {});
 
   const showSwitch = form?.status === StatusTypes.APPROVED;
 
@@ -157,8 +159,6 @@ const FormPage = () => {
       seasons,
       visitInfo: values?.visitInfo?.id,
       additionalInfos: getIds(values.additionalInfos),
-      categories: getIds(values.categories),
-      subCategories: getIds(values.subCategories),
     };
 
     return await createForm.mutateAsync(params);
@@ -173,7 +173,7 @@ const FormPage = () => {
   };
 
   const initialValues: FormProps = {
-    categories: form?.categories || [],
+    categories: form?.categories ? form.categories.map(Number) : [],
     visitInfo: form?.visitInfo,
     seasons: getSeasons(),
     visitDuration: form?.visitDuration,
@@ -187,7 +187,6 @@ const FormPage = () => {
     geom: form?.geom,
     isPaid: form?.isPaid || false,
     isAdaptedForForeigners: form?.isAdaptedForForeigners || false,
-    subCategories: form?.subCategories || [],
     photos: form?.photos || [],
   };
 
@@ -198,8 +197,6 @@ const FormPage = () => {
   const showPhotoContainer = !disabled || !isEmpty(form?.photos);
 
   const renderForm = (values: FormProps, errors: any, handleChange: any) => {
-    const hasCategories = !isEmpty(values?.categories);
-
     const getSeasonOptions = () => {
       if (values.seasons.includes(Season.ALL)) {
         return [];
@@ -235,44 +232,39 @@ const FormPage = () => {
               checked={form?.isActive}
               enabledLabel={'Aktyvus objektas'}
               disabledLabel={'Objektas laikinai neveikia'}
-              onChange={disable.mutateAsync}
+              onChange={() => {
+                console.log('test');
+                disable.mutateAsync();
+              }}
             />
           </SwitchContainer>
         )}
         <Container>
           <ColumnOne>
             <SimpleContainer title={formLabels.categories}>
-              <FormRow columns={hasCategories ? 2 : 1}>
-                <AsyncMultiSelectField
-                  label={inputLabels.categories}
-                  values={values?.categories}
-                  disabled={disabled}
-                  error={errors.categories}
-                  name="categories"
-                  onChange={(categories) => {
-                    handleChange('categories', categories);
-                    handleChange('subCategories', []);
-                  }}
-                  getOptionLabel={(option) => option?.name}
-                  loadOptions={(input, page) => getCategoriesOptions(input, page)}
-                />
-                {hasCategories && (
-                  <AsyncMultiSelectField
-                    label={inputLabels.subCategories}
-                    dependantValue={values?.categories?.map((item) => item?.id)}
-                    values={values?.subCategories}
-                    name="subCategories"
-                    disabled={disabled}
-                    error={errors.subCategories}
-                    onChange={(categories) => {
-                      handleChange('subCategories', categories);
-                    }}
-                    getOptionLabel={(option) => option?.name}
-                    loadOptions={(input, page, ids) => {
-                      return getSubCategoriesOptions(input, page, ids);
-                    }}
-                  />
-                )}
+              <FormRow columns={1}>
+                <TreeSelectContainer>
+                  <RelativeFieldWrapper
+                    error={errors.categories}
+                    showError={true}
+                    label={inputLabels.categories}
+                  >
+                    <StyledTreeSelect
+                      error={errors.categories}
+                      value={values?.categories || []}
+                      treeData={categories}
+                      style={{ width: '100%' }}
+                      suffixIcon={<StyledIcons name={IconName.dropdownArrow} />}
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      fieldNames={{ label: 'name', children: 'children', value: 'id' }}
+                      treeCheckable
+                      onChange={(categories) => handleChange('categories', categories)}
+                      placeholder="Pasirinkite"
+                      showCheckedStrategy={SHOW_PARENT}
+                      disabled={disabled}
+                    />
+                  </RelativeFieldWrapper>
+                </TreeSelectContainer>
               </FormRow>
             </SimpleContainer>
             <SimpleContainer title={formLabels.LTInfo}>
@@ -494,6 +486,12 @@ const FormPage = () => {
 };
 
 export default FormPage;
+
+const StyledIcons = styled(Icon)`
+  color: #cdd5df;
+  font-size: 2.4rem;
+`;
+
 const SwitchContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
@@ -517,4 +515,60 @@ const SubTItle = styled.div`
   gap: 12px;
   align-items: center;
   margin-bottom: 12px;
+`;
+
+const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
+  .ant-select-selector,
+  .ant-select-selection-search-input {
+    min-height: ${({ theme }) => `${theme.height?.fields || 5.6}rem`} !important;
+    padding: 0px 12px !important;
+    font-size: ${({ theme }) => theme.fontSize?.fields || 1.6}rem;
+    display: flex;
+    align-items: center;
+  }
+  .ant-select {
+    transition: none !important;
+  }
+
+  .ant-select-selector {
+    border: 1px solid ${({ theme, error }) => (error ? theme.colors.error : theme.colors.border)} !important;
+    border-radius: ${({ theme }) => theme.radius?.fields || 0.4}rem; !important;
+    background-color: ${({ theme }) => theme.colors.fields?.background || 'white'};
+    color: ${({ theme }) => theme.colors.fields?.text || '#101010'};
+  }
+
+  .ant-select-selection-overflow-item{
+    padding-top:4px;
+  }
+
+  .ant-select-selector,
+  .ant-select-disabled {
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${({ disabled }) => (disabled ? 0.48 : 1)};
+    background: white !important;
+  }
+
+
+  .ant-select-selector:focus-within {
+    border-color: ${({ theme }) =>
+      theme.colors.fields?.borderFocus || theme.colors.fields?.border || '#d4d5de'} !important;
+    box-shadow: ${({ theme }) =>
+      theme.colors.fields?.borderFocus
+        ? `0 0 0 4px ${theme.colors.fields.borderFocus}33`
+        : 'none'} !important;
+    outline: none !important;
+    animation-duration: 0s !important;
+    transition: none !important;
+  }
+`;
+
+const TreeSelectContainer = styled.div`
+  display: block;
+  @media ${device.mobileL} {
+    border: none;
+  }
+`;
+
+const RelativeFieldWrapper = styled(FieldWrapper)`
+  position: relative;
 `;

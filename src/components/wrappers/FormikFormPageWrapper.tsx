@@ -74,8 +74,6 @@ const FormPageWrapper = ({
     return additionalErrors;
   };
 
-  const url: string | number = backUrl || -1;
-
   return (
     <Container>
       <Formik
@@ -94,7 +92,7 @@ const FormPageWrapper = ({
                   {back && (
                     <StyledBackButton
                       type="button"
-                      onClick={() => navigate(url as string)}
+                      onClick={() => navigate(-1)}
                       left={<StyledBackIcon name={IconName.back} />}
                       variant={ButtonColors.TRANSPARENT}
                     >

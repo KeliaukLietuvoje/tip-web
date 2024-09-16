@@ -1,4 +1,3 @@
-import { FilterConfig } from '@aplinkosministerija/design-system';
 import { map } from 'lodash';
 import { NavigateFunction } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -55,28 +54,6 @@ export const handleNavigate = (
 ) => {
   navigate(slug);
   show(false);
-};
-
-export const handleDateRestriction = (filter: FilterConfig, values: any) => {
-  if (filter?.key?.includes('From')) {
-    const dateTo = filter?.key?.replace('From', 'To');
-    if (values?.[dateTo]) {
-      return { maxDate: new Date(values[dateTo]) };
-    }
-  }
-  if (filter?.key?.includes('To')) {
-    const dateFrom = filter?.key?.replace('To', 'From');
-    if (values?.[dateFrom]) {
-      return { minDate: new Date(values[dateFrom]) };
-    }
-  }
-};
-export const getCategoriesOptions = async (input: string, page: number) => {
-  return await Api.getCategories({
-    filter: { name: input },
-    query: { parent: { $exists: false } },
-    page,
-  });
 };
 
 export const getVisitInfoOptions = async (input: string, page: number) => {

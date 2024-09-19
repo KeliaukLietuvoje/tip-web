@@ -224,6 +224,45 @@ const FormPage = () => {
       handleChange('photos', [...values.photos, ...uploadedPhotos]);
     };
 
+    const handleTreeSelect = (newValue) => {
+      const newSelection = newValue.map((nV) => nV.value);
+
+      const updateSelection = (node) => {
+        if (node?.children?.length) {
+          const childValues = node.children.map((child) => child.id);
+          const hasSelectedChild = childValues.some((childValue) =>
+            newSelection.includes(childValue),
+          );
+
+          if (hasSelectedChild && !newSelection.includes(node.id)) {
+            if (values.categories.includes(node.id)) {
+              return true;
+            }
+
+            newSelection.push(node.id);
+          }
+
+          for (const child of node.children) {
+            const shouldStop = updateSelection(child);
+            if (shouldStop) {
+              return true;
+            }
+          }
+        }
+
+        return false;
+      };
+
+      for (const category of categories) {
+        const shouldStop = updateSelection(category);
+        if (shouldStop) {
+          return;
+        }
+      }
+
+      handleChange('categories', newSelection);
+    };
+
     return (
       <>
         {showSwitch && (
@@ -258,7 +297,7 @@ const FormPage = () => {
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                       fieldNames={{ label: 'name', children: 'children', value: 'id' }}
                       treeCheckable
-                      onChange={(categories) => handleChange('categories', categories)}
+                      onChange={handleTreeSelect}
                       placeholder="Pasirinkite"
                       showCheckedStrategy={SHOW_PARENT}
                       disabled={disabled}

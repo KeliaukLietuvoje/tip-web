@@ -77,7 +77,6 @@ interface FormProps {
 }
 
 const FormPage = () => {
-  const { SHOW_PARENT } = TreeSelect;
   const navigate = useNavigate();
   const { id = '' } = useParams();
   const seasonOptions = getSeasonOptions();
@@ -299,7 +298,7 @@ const FormPage = () => {
                       treeCheckable
                       onChange={handleTreeSelect}
                       placeholder="Pasirinkite"
-                      showCheckedStrategy={SHOW_PARENT}
+                      treeCheckStrictly
                       disabled={disabled}
                     />
                   </RelativeFieldWrapper>

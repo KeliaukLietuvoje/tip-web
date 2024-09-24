@@ -52,15 +52,12 @@ export const validateFormRowInfo = (values: { name: string; items: { [key: strin
 
 export const validateForm = Yup.object().shape({
   categories: Yup.array().min(1, validationTexts.requireSelect),
-  seasons: Yup.array().min(1, validationTexts.requireSelect),
-  urlLT: Yup.string()
-    .required(validationTexts.requireText)
-    .trim()
-    .matches(urlRegex, validationTexts.badUrlFormat),
+  urlLT: Yup.string().trim().nullable().notRequired().matches(urlRegex, {
+    message: validationTexts.badUrlFormat,
+    excludeEmptyString: true,
+  }),
   nameLT: Yup.string().required(validationTexts.requireText).nullable(),
-  descriptionLT: Yup.string().required(validationTexts.requireText).nullable(),
   geom: Yup.object().required(validationTexts.requireMap).nullable(),
-  visitInfo: Yup.object().required(validationTexts.requireSelect).nullable(),
 });
 
 export const validateUpdateTenantUser = Yup.object().shape({

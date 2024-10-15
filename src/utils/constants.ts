@@ -75,6 +75,7 @@ export enum Populations {
   ATTENDANCE_INFO = 'attendanceInfo',
   CHILDREN = 'children',
   ATTENDANCE_TIME = 'attendanceTime',
+  TENANT = 'tenant',
 }
 
 export enum SortFields {

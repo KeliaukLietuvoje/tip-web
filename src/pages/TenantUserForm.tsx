@@ -1,5 +1,6 @@
 import {
   NumericTextField,
+  PhoneField,
   SelectField,
   SimpleContainer,
   TextField,
@@ -131,7 +132,7 @@ const TenantUserForm = () => {
                   onChange={(code) => handleChange('personalCode', code.replace(/\s/g, ''))}
                 />
               )}
-              <TextField
+              <PhoneField
                 label={inputLabels.phone}
                 value={values.phone}
                 error={errors.phone}

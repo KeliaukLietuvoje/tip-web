@@ -24,7 +24,6 @@ interface FormPageWrapperProps {
   validationSchema: any;
   additionalValidation?: any;
   back?: boolean;
-  backUrl?: string;
   disabled?: boolean;
   deleteInfo?: DeleteInfoProps;
   twoColumn?: boolean;
@@ -39,7 +38,6 @@ const FormPageWrapper = ({
   validationSchema,
   back = true,
   additionalValidation,
-  backUrl,
   disabled,
   deleteInfo,
   twoColumn = false,

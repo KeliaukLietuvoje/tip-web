@@ -1,4 +1,4 @@
-import { SimpleContainer, TextField } from '@aplinkosministerija/design-system';
+import { PhoneField, SimpleContainer, TextField } from '@aplinkosministerija/design-system';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
@@ -71,7 +71,7 @@ const Profile = () => {
                 error={errors.lastName}
                 onChange={(lastName) => handleChange('lastName', lastName)}
               />
-              <TextField
+              <PhoneField
                 label={inputLabels.phone}
                 value={values.phone}
                 error={errors.phone}

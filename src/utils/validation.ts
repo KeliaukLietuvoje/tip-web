@@ -1,3 +1,4 @@
+import { phoneNumberRegexPattern } from '@aplinkosministerija/design-system';
 import * as Yup from 'yup';
 import { availableMimeTypes } from './constants';
 import { validationTexts } from './texts';
@@ -15,7 +16,7 @@ export const validateCreateTenantUser = Yup.object().shape({
   phone: Yup.string()
     .required(validationTexts.requireText)
     .trim()
-    .matches(/^(86|\+3706)\d{7}$/, validationTexts.badPhoneFormat)
+    .matches(phoneNumberRegexPattern, validationTexts.badPhoneFormat)
     .nullable(),
   email: Yup.string()
     .email(validationTexts.badEmailFormat)
@@ -70,7 +71,7 @@ export const validateUpdateTenantUser = Yup.object().shape({
   phone: Yup.string()
     .required(validationTexts.requireText)
     .trim()
-    .matches(/^(86|\+3706)\d{7}$/, validationTexts.badPhoneFormat)
+    .matches(phoneNumberRegexPattern, validationTexts.badPhoneFormat)
     .nullable(),
   email: Yup.string().email(validationTexts.badEmailFormat).required(validationTexts.requireText),
 });
@@ -93,7 +94,7 @@ export const validateProfileForm = Yup.object().shape({
   phone: Yup.string()
     .required(validationTexts.requireText)
     .trim()
-    .matches(/(86|\+3706)\d{7}/, validationTexts.badPhoneFormat),
+    .matches(phoneNumberRegexPattern, validationTexts.badPhoneFormat),
   email: Yup.string().email(validationTexts.badEmailFormat).required(validationTexts.requireText),
 });
 

@@ -271,7 +271,6 @@ const FormPage = () => {
               enabledLabel={'Aktyvus objektas'}
               disabledLabel={'Objektas laikinai neveikia'}
               onChange={() => {
-                console.log('test');
                 disable.mutateAsync();
               }}
             />

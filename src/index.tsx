@@ -23,8 +23,6 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 const env = import.meta.env;
 
-const basename = env?.VITE_BASE_URL || '/';
-
 if (env.VITE_SENTRY_DSN) {
   Sentry.init({
     environment: env.VITE_ENVIRONMENT,
@@ -53,7 +51,7 @@ root.render(
     <DesignSystemProvider>
       <QueryClientProvider client={queryClient}>
         <PersistGate persistor={persistor}>
-          <BrowserRouter basename={basename}>
+          <BrowserRouter>
             <ThemeProvider theme={theme}>
               <GlobalStyle />
               <App />

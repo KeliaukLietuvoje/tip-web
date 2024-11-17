@@ -53,6 +53,14 @@ function App() {
   const currentProfile = useGetCurrentProfile();
   const profileId = currentProfile?.id;
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach(async (registration) => {
+        await registration.unregister();
+      });
+    });
+  }
+
   const isInvalidProfile =
     profileId &&
     !profiles

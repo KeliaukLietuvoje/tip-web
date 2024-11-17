@@ -23,7 +23,6 @@ jobs:
           push: true
           build-args: |
             NODE_ENV=development
-            VITE_BASE_URL=/app
 
       - name: Trigger deploy
         uses: AplinkosMinisterija/reusable-workflows/.github/actions/trigger-workflow-and-wait@main

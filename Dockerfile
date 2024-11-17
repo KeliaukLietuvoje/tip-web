@@ -13,7 +13,6 @@ COPY . .
 # Set env variables
 ARG VITE_SENTRY_DSN=
 ARG VITE_SENTRY_ENV=production
-ARG VITE_BASE_URL=/app
 ARG NODE_ENV=production
 
 # Build and cleanup
